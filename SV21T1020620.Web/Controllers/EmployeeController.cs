@@ -6,7 +6,7 @@ namespace SV21T1020620.Web.Controllers
 {
     public class EmployeeController : Controller
     {
-        private const int PAGE_SIZE = 12;
+        private const int PAGE_SIZE = 21;
         public IActionResult Index(int page = 1, string searchValue = "")
         {
             int rowCount;
@@ -29,7 +29,8 @@ namespace SV21T1020620.Web.Controllers
             var data = new Employee()
             {
                 EmployeeID = 0,
-                IsWorking = true
+                IsWorking = true,
+                Photo = "nophoto.png"
             };
             return View("Edit", data);
         }
@@ -41,9 +42,25 @@ namespace SV21T1020620.Web.Controllers
                 return RedirectToAction("Index");
             return View(data);
         }
-        public IActionResult Save(Employee data)
+        public IActionResult Save(Employee data, string _BirthDate, IFormFile? _Photo)
         {
-            //TODO: Kiểm soát dữ liệu đầu vào
+            //Xu ly ngay sinh
+            DateTime? d = _BirthDate.ToDateTime();
+            if (d.HasValue) //(d != null)
+                data.BirthDate = d.Value;
+            //Xu ly voi anh
+            if (_Photo != null)
+            {
+                string fileName = $"{DateTime.Now.Ticks}-{_Photo.FileName}";
+                string filePath = Path.Combine(ApplicationContext.WebRootPath, @"images\employees", fileName);
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    _Photo.CopyTo(stream);
+                }
+                data.Photo = fileName;
+            }
+
+
             if (data.EmployeeID == 0)
             {
                 CommonDataService.AddEmployee(data);

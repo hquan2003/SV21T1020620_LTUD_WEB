@@ -12,8 +12,7 @@
                        type="text"
                        class="form-control"
                        placeholder="Nhập tên nhân viên cần tìm"
-                       value="@ViewBag.SearchValue"
-                       autofocus />
+                       autofocus name="searchValue" value="@ViewBag.searchValue" />
                 <div class="input-group-btn">
                     <button class="btn btn-info" type="submit">
                         <i class="fa fa-search"></i>
@@ -48,12 +47,12 @@
                         <div class="box-body">
                             <div class="row">
                                 <div class="col-sm-4">
-                                    <img class="profile-user-img img-responsive img-bordered" src="~/themes/dist/img/user4-128x128.jpg">
+                                    <img class="profile-user-img img-responsive img-bordered" src="~/images/employees/@item.Photo">
                                 </div>
                                 <div class="col-sm-8">
                                     <ul class="list-group list-group-unbordered">
                                         <li class="list-group-item">
-                                            <i class="fa fa-birthday-cake"></i> @item.BirthDate
+                                            <i class="fa fa-birthday-cake"></i> @item.BirthDate.ToString("dd/MM/yyyy", new System.Globalization.CultureInfo("en-GB"))
                                         </li>
                                         <li class="list-group-item">
                                             <i class="fa fa-phone"></i> @item.Phone

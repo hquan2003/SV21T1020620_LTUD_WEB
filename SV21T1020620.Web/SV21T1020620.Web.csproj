@@ -6085,6 +6085,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\SV21T1020620.BusinessLayers\SV21T1020620.BusinessLayers.csproj" />
     <ProjectReference Include="..\SV21T1020620.DataLayers\SV21T1020620.DataLayers.csproj" />
     <ProjectReference Include="..\SV21T1020620.DomainModels\SV21T1020620.DomainModels.csproj" />
