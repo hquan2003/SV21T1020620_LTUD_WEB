@@ -59,16 +59,54 @@ namespace SV21T1020620.Web.Controllers
 
         public IActionResult Save(Customer data)
         {
-            //TODO: Kiểm soát dữ liệu đầu vào
-            if(data.CustomerId == 0)
+            ViewBag.Title = data.CustomerId == 0 ? "Bổ sung khách hàng mới" : "Cập nhật thông tin khách hàng";
+
+            //Kiểm tra nếu dữ liệu đầu vào không hợp lệ thì tạo ra một thông báo lỗi và lưu trữ vào ModelState
+            if (string.IsNullOrWhiteSpace(data.CustomerName))
+                ModelState.AddModelError(nameof(data.CustomerName), "Tên khách hàng không được để trống");
+            if (string.IsNullOrWhiteSpace(data.ContactName))
+                ModelState.AddModelError(nameof(data.ContactName), "Tên giao dịch không được để trống");
+            if (string.IsNullOrWhiteSpace(data.Phone))
+                ModelState.AddModelError(nameof(data.Phone), "Số điện thoại không được để trống");
+            if (string.IsNullOrWhiteSpace(data.Email))
+                ModelState.AddModelError(nameof(data.Email), "Email khách hàng không được để trống");
+            if (string.IsNullOrWhiteSpace(data.Address))
+                ModelState.AddModelError(nameof(data.Address), "Địa chỉ khách hàng không được để trống");
+            if(string.IsNullOrEmpty(data.Province))
+                ModelState.AddModelError(nameof(data.Province), "Hãy chọn tỉnh thành");
+
+            //Dựa vào thuộc tính IsValid của ModelState để biết có tồn tại hay không ?
+            if(ModelState.IsValid == false) //!ModelState.IsValid
             {
-                CommonDataService.AddCustomer(data);
+                return View("Edit", data);
             }
-            else
+            try
             {
-                CommonDataService.UpdateCustomer(data);
+                if (data.CustomerId == 0)
+                {
+                    int id = CommonDataService.AddCustomer(data);
+                    if (id <= 0)
+                    {
+                        ModelState.AddModelError(nameof(data.Email), "Email bị trùng");
+                        return View("Edit", data);
+                    }
+                }
+                else
+                {
+                    bool result = CommonDataService.UpdateCustomer(data);
+                    if (result == false)
+                    {
+                        ModelState.AddModelError(nameof(data.Email), "Email bị trùng");
+                        return View("Edit", data);
+                    }
+                }
+                return RedirectToAction("Index");
             }
-            return RedirectToAction("Index");
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("Error", "Hệ thống tạm thời gián đoạn");
+                return View("Edit", data);
+            }
         }
 
         public IActionResult Delete(int id = 0)
