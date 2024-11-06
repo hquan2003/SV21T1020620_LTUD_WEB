@@ -1,27 +1,42 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SV21T1020620.BusinessLayers;
 using SV21T1020620.DomainModels;
+using SV21T1020620.Web.Models;
 
 namespace SV21T1020620.Web.Controllers
 {
     public class EmployeeController : Controller
     {
         private const int PAGE_SIZE = 21;
-        public IActionResult Index(int page = 1, string searchValue = "")
+        private const string EMPLOYEE_SEARCH_CONDITION = "EmployeeSearchCondition";
+        public IActionResult Index()
+        {
+            PaginationSearchInput? condition = ApplicationContext.GetSessionData<PaginationSearchInput>(EMPLOYEE_SEARCH_CONDITION);
+            if (condition == null)
+                condition = new PaginationSearchInput()
+                {
+                    Page = 1,
+                    PageSize = PAGE_SIZE,
+                    SearchValue = ""
+                };
+            return View(condition);
+
+        }
+
+        public IActionResult Search(PaginationSearchInput condition)
         {
             int rowCount;
-            var data = CommonDataService.ListOfEmployees(out rowCount, page, PAGE_SIZE, searchValue ?? "");
-
-            int pageCount = rowCount / PAGE_SIZE;
-            if (rowCount % PAGE_SIZE > 0)
-                pageCount += 1;
-
-            ViewBag.Page = page;
-            ViewBag.RowCount = rowCount;
-            ViewBag.PageCount = pageCount;
-            ViewBag.SearchValue = searchValue;
-
-            return View(data);
+            var data = CommonDataService.ListOfEmployees(out rowCount, condition.Page, condition.PageSize, condition.SearchValue ?? "");
+            EmployeeSearchResult model = new EmployeeSearchResult()
+            {
+                Page = condition.Page,
+                PageSize = condition.PageSize,
+                SearchValue = condition.SearchValue ?? "",
+                RowCount = rowCount,
+                Data = data
+            };
+            ApplicationContext.SetSessionData(EMPLOYEE_SEARCH_CONDITION, condition);
+            return View(model);
         }
         public IActionResult Create()
         {
@@ -44,6 +59,24 @@ namespace SV21T1020620.Web.Controllers
         }
         public IActionResult Save(Employee data, string _BirthDate, IFormFile? _Photo)
         {
+            ViewBag.Title = data.EmployeeID == 0 ? "Bổ sung nhân viên mới" : "Cập nhật thông tin nhân viên";
+
+            //Kiểm tra nếu dữ liệu đầu vào không hợp lệ thì tạo ra một thông báo lỗi và lưu trữ vào ModelState
+            if (string.IsNullOrWhiteSpace(data.FullName))
+                ModelState.AddModelError(nameof(data.FullName), "Tên nhân viên không được để trống");
+            if (string.IsNullOrWhiteSpace(data.Address))
+                ModelState.AddModelError(nameof(data.Address), "Địa chỉ nhân viên không được để trống");
+            if (string.IsNullOrWhiteSpace(data.Phone))
+                ModelState.AddModelError(nameof(data.Phone), "Số điện thoại nhân viên không được để trống");
+            if (string.IsNullOrWhiteSpace(data.Email))
+                ModelState.AddModelError(nameof(data.Email), "Email nhân viên không được để trống");
+            //if (string.IsNullOrWhiteSpace(data.Password))
+            //    ModelState.AddModelError(nameof(data.Password), "Nhập mật khẩu");
+            if (data.Photo == null)
+                ModelState.AddModelError(nameof(data.Photo), "Chọn ảnh");
+            if (data.BirthDate == null)
+                ModelState.AddModelError(nameof(data.BirthDate), "Nhập ngày sinh nhân viên");
+
             //Xu ly ngay sinh
             DateTime? d = _BirthDate.ToDateTime();
             if (d.HasValue) //(d != null)
@@ -59,17 +92,38 @@ namespace SV21T1020620.Web.Controllers
                 }
                 data.Photo = fileName;
             }
-
-
-            if (data.EmployeeID == 0)
+            //Dựa vào thuộc tính IsValid của ModelState để biết có tồn tại hay không ?
+            if (ModelState.IsValid == false) //!ModelState.IsValid
             {
-                CommonDataService.AddEmployee(data);
+                return View("Edit", data);
             }
-            else
+            try
             {
-                CommonDataService.UpdateEmployee(data);
+                if (data.EmployeeID == 0)
+                {
+                    int id = CommonDataService.AddEmployee(data);
+                    if (id <= 0)
+                    {
+                        ModelState.AddModelError(nameof(data.Email), "Email bị trùng");
+                        return View("Edit", data);
+                    }
+                }
+                else
+                {
+                    bool result = CommonDataService.UpdateEmployee(data);
+                    if (result == false)
+                    {
+                        ModelState.AddModelError(nameof(data.Email), "Email bị trùng");
+                        return View("Edit", data);
+                    }
+                }
+                return RedirectToAction("Index");
             }
-            return RedirectToAction("Index");
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("Error", "Hệ thống tạm thời gián đoạn");
+                return View("Edit", data);
+            }
         }
 
         public IActionResult Delete(int id = 0)

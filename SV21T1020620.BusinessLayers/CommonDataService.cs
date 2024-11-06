@@ -16,7 +16,7 @@ namespace SV21T1020620.BusinessLayers
         /// </summary>
         static CommonDataService()
         {
-            string connectionString = @"server=LAPTOP-U1MLCCJ5\SQLEXPRESS;user id=sa;password=12345;database=LiteCommerceDB;TrustServerCertificate=true";
+            string connectionString = @"server=LAPTOP-U1MLCCJ5\SQLEXPRESS;user id=sa;password=1234;database=LiteCommerceDB;TrustServerCertificate=true";
 
             provinceDB = new DataLayers.SQLServer.ProvinceDAL(connectionString);
             customerDB = new DataLayers.SQLServer.CustomerDAL(connectionString);

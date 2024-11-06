@@ -11,11 +11,13 @@
             <div class="form-group">
                 <label>Người giao hàng</label>
                 <input type="text" class="form-control" name="@nameof(Model.ShipperName)" value="@Model.ShipperName">
+                @Html.ValidationMessage(nameof(Model.ShipperName))
             </div>
 
             <div class="form-group">
                 <label>Điện thoại</label>
                 <input type="text" class="form-control" name="@nameof(Model.Phone)" value="@Model.Phone">
+                @Html.ValidationMessage(nameof(Model.Phone))
             </div>
 
             <div class="form-group text-right">
@@ -26,7 +28,7 @@
                     Quay lại
                 </a>
             </div>
-
+            @Html.ValidationMessage("Error")
         </form>
     </div>
 </div>

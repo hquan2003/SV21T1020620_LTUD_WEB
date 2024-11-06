@@ -1,27 +1,42 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SV21T1020620.BusinessLayers;
 using SV21T1020620.DomainModels;
+using SV21T1020620.Web.Models;
 
 namespace SV21T1020620.Web.Controllers
 {
     public class CategoryController : Controller
     {
         private const int PAGE_SIZE = 5;
-        public IActionResult Index(int page = 1, string searchValue = "")
+        private const string CATEGORY_SEARCH_CONDITION = "CategorySearchCondition";
+        public IActionResult Index()
+        {
+            PaginationSearchInput? condition = ApplicationContext.GetSessionData<PaginationSearchInput>(CATEGORY_SEARCH_CONDITION);
+            if (condition == null)
+                condition = new PaginationSearchInput()
+                {
+                    Page = 1,
+                    PageSize = PAGE_SIZE,
+                    SearchValue = ""
+                };
+            return View(condition);
+
+        }
+
+        public IActionResult Search(PaginationSearchInput condition)
         {
             int rowCount;
-            var data = CommonDataService.ListOfCategories(out rowCount, page, PAGE_SIZE, searchValue ?? "");
-
-            int pageCount = rowCount / PAGE_SIZE;
-            if (rowCount % PAGE_SIZE > 0)
-                pageCount += 1;
-
-            ViewBag.Page = page;
-            ViewBag.RowCount = rowCount;
-            ViewBag.PageCount = pageCount;
-            ViewBag.SearchValue = searchValue;
-
-            return View(data);
+            var data = CommonDataService.ListOfCategories(out rowCount, condition.Page, condition.PageSize, condition.SearchValue ?? "");
+            CategorySearchResult model = new CategorySearchResult()
+            {
+                Page = condition.Page,
+                PageSize = condition.PageSize,
+                SearchValue = condition.SearchValue ?? "",
+                RowCount = rowCount,
+                Data = data
+            };
+            ApplicationContext.SetSessionData(CATEGORY_SEARCH_CONDITION, condition);
+            return View(model);
         }
         public IActionResult Create()
         {
@@ -43,16 +58,46 @@ namespace SV21T1020620.Web.Controllers
 
         public IActionResult Save(Category data)
         {
-            //TODO: Kiểm soát dữ liệu đầu vào
-            if (data.CategoryID == 0)
+            ViewBag.Title = data.CategoryID == 0 ? "Bổ sung loại hàng mới" : "Cập nhật thông tin loại hàng";
+
+            //Kiểm tra nếu dữ liệu đầu vào không hợp lệ thì tạo ra thông báo lỗi và lưu vào ModelState
+            if (string.IsNullOrWhiteSpace(data.CategoryName))
+                ModelState.AddModelError(nameof(data.CategoryName), "Tên loại hàng không được để trống");
+            if (string.IsNullOrWhiteSpace(data.Description))
+                ModelState.AddModelError(nameof(data.Description), "Viết thêm mô tả về loại hàng");
+
+            //Dựa vào thuộc tính IsValid của ModelState để biết có tồn tại hay không ?
+            if (ModelState.IsValid == false) //!ModelState.IsValid
             {
-                CommonDataService.AddCategory(data);
+                return View("Edit", data);
             }
-            else
+            try
             {
-                CommonDataService.UpdateCategory(data);
+                if (data.CategoryID == 0)
+                {
+                    int id = CommonDataService.AddCategory(data);
+                    if (id <= 0)
+                    {
+                        ModelState.AddModelError(nameof(data.CategoryName), "Tên loại hàng bị trùng");
+                        return View("Edit", data);
+                    }
+                }
+                else
+                {
+                    bool result = CommonDataService.UpdateCategory(data);
+                    if (result == false)
+                    {
+                        ModelState.AddModelError(nameof(data.CategoryName), "Tên loại hàng bị trùng");
+                        return View("Edit", data);
+                    }
+                }
+                return RedirectToAction("Index");
             }
-            return RedirectToAction("Index");
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("Error", "Hệ thống tạm thời gián đoạn");
+                return View("Edit", data);
+            }
         }
 
         public IActionResult Delete(int id = 0)
