@@ -1,4 +1,6 @@
-﻿namespace SV21T1020620.DataLayers
+﻿using SV21T1020620.DomainModels;
+
+namespace SV21T1020620.DataLayers
 {
     /// <summary>
     /// Định nghĩa các phép sử lý dữ liệu thường dùng trên bảng ( Customers, Employees,Shippers,... )
@@ -50,5 +52,6 @@
         /// <param name="id"></param>
         /// <returns></returns>
         bool InUsed(int id);
+        List<T> GetAll();
     }
 }

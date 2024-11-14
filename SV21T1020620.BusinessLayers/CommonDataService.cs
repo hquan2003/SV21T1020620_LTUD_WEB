@@ -1,4 +1,5 @@
 ﻿using SV21T1020620.DataLayers;
+using SV21T1020620.DataLayers.SQLServer;
 using SV21T1020620.DomainModels;
 
 namespace SV21T1020620.BusinessLayers
@@ -16,14 +17,14 @@ namespace SV21T1020620.BusinessLayers
         /// </summary>
         static CommonDataService()
         {
-            string connectionString = @"server=LAPTOP-U1MLCCJ5\SQLEXPRESS;user id=sa;password=1234;database=LiteCommerceDB;TrustServerCertificate=true";
+            string connectionString = Configuration.ConnectionString;
 
-            provinceDB = new DataLayers.SQLServer.ProvinceDAL(connectionString);
-            customerDB = new DataLayers.SQLServer.CustomerDAL(connectionString);
-            shipperDB = new DataLayers.SQLServer.ShipperDAL(connectionString);
-            supplierDB = new DataLayers.SQLServer.SupplierDAL(connectionString);
-            employeeDB = new DataLayers.SQLServer.EmployeeDAL(connectionString);
-            categoryDB = new DataLayers.SQLServer.CategoryDAL(connectionString);
+            provinceDB = new ProvinceDAL(connectionString);
+            customerDB = new CustomerDAL(connectionString);
+            shipperDB = new ShipperDAL(connectionString);
+            supplierDB = new SupplierDAL(connectionString);
+            employeeDB = new EmployeeDAL(connectionString);
+            categoryDB = new CategoryDAL(connectionString);
         }
 
         public static List<Province> ListOfProvinces()
@@ -277,6 +278,13 @@ namespace SV21T1020620.BusinessLayers
         {
             return categoryDB.InUsed(id);
         }
-
+        public static List<Category> GetAllCategory()
+        {
+            return categoryDB.GetAll();
+        }
+        public static List<Supplier> GetAllSupplier()
+        {
+            return supplierDB.GetAll();
+        }
     }
 }

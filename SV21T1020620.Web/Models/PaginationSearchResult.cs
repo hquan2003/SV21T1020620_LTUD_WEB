@@ -44,4 +44,19 @@ namespace SV21T1020620.Web.Models
     {
         public required List<Shipper> Data { get; set; }
     }
+    public class ProductSearchResult : PaginationSearchResult
+    {
+        public int CategoryID { get; set; } = 0;
+        public int SupplierID { get; set; } = 0;
+        public decimal MinPrice { get; set; } = 0;
+        public decimal MaxPrice { get; set; } = 0;
+        public required List<Product> Data { get; set; }
+    }
+    public class OrderSearchResult : PaginationSearchResult
+    {
+        public int Status { get; set; } = 0;
+        public string TimeRange { get; set; } = "";
+        public List<Order> Data { get; set; } = new List<Order>();
+
+    }
 }

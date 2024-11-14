@@ -89,6 +89,11 @@ namespace SV21T1020620.DataLayers.SQLServer
             return data;
         }
 
+        public List<Customer> GetAll()
+        {
+            throw new NotImplementedException();
+        }
+
         public bool InUsed(int id)
         {
             bool result = false;

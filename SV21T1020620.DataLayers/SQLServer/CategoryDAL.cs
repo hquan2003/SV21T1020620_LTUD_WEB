@@ -153,5 +153,18 @@ namespace SV21T1020620.DataLayers.SQLServer
             }
             return result;
         }
+
+        public List<Category> GetAll()
+        {
+            List<Category> list = new List<Category>();
+            using (var conn = OpenConnection())
+            {
+                String sql = @"select * from Categories "
+;
+                list = conn.Query<Category>(sql: sql, commandType: System.Data.CommandType.Text).ToList();
+                conn.Close();
+            }
+            return list;
+        }
     }
 }

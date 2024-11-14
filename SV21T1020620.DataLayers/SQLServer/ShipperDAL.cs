@@ -153,5 +153,9 @@ namespace SV21T1020620.DataLayers.SQLServer
             }
             return result;
         }
+        public List<Shipper> GetAll()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

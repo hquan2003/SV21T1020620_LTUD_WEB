@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace SV21T1020620.Web
 {
@@ -7,8 +7,6 @@ namespace SV21T1020620.Web
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
-            // Add services to the container.
             builder.Services.AddHttpContextAccessor();
             builder.Services.AddControllersWithViews()
                 .AddMvcOptions(option =>
@@ -19,8 +17,8 @@ namespace SV21T1020620.Web
                             .AddCookie(option =>
                             {
                                 option.Cookie.Name = "AuthenticationCookie";
-                                option.LoginPath = "/Accont/Login";
-                                option.AccessDeniedPath = "/Account/AccessDenied";
+                                option.LoginPath = "/Account/Login";
+                                option.AccessDeniedPath = "/Account/AccessDenined";
                                 option.ExpireTimeSpan = TimeSpan.FromDays(360);
                             });
             builder.Services.AddSession(option =>
@@ -29,6 +27,7 @@ namespace SV21T1020620.Web
                 option.Cookie.HttpOnly = true;
                 option.Cookie.IsEssential = true;
             });
+            // Add services to the container.
 
             var app = builder.Build();
 
@@ -47,13 +46,13 @@ namespace SV21T1020620.Web
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
-
-            ApplicationContext.Configure
-                (
-                    context: app.Services.GetRequiredService<IHttpContextAccessor>(),
-                    enviroment: app.Services.GetRequiredService<IWebHostEnvironment>()
+            ApplicationContext.Configure(
+                context: app.Services.GetRequiredService<IHttpContextAccessor>(),
+                enviroment: app.Services.GetRequiredService<IWebHostEnvironment>()
                 );
-
+            // khởi tạo cấu hình cho Bussinesslayer
+            string connectióntring = builder.Configuration.GetConnectionString("LiteCommerceDB");
+            SV21T1020620.BusinessLayers.Configuration.Initialize(connectióntring);
             app.Run();
         }
     }

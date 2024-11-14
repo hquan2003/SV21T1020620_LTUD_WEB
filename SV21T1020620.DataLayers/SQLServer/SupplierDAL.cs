@@ -162,5 +162,17 @@ namespace SV21T1020620.DataLayers.SQLServer
             }
             return result;
         }
+        public List<Supplier> GetAll()
+        {
+            List<Supplier> list = new List<Supplier>();
+            using (var conn = OpenConnection())
+            {
+                string sql = @"select * from Suppliers "
+;
+                list = conn.Query<Supplier>(sql: sql, commandType: System.Data.CommandType.Text).ToList();
+                conn.Close();
+            }
+            return list;
+        }
     }
 }

@@ -68,7 +68,6 @@
 
                     <input type="file" class="form-control" name="_Photo" accept="image/*"
                            onchange="document.getElementById('Photo').src = window.URL.createObjectURL(this.files[0])" />
-                    @Html.ValidationMessage(nameof(Model.Photo))
                 </div>
             </div>
 
