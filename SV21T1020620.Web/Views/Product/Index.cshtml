@@ -11,16 +11,16 @@
                 <div class="col-sm-3">
                     <label>Loại hàng:</label>
                     <select class="form-control" name="@nameof(Model.CategoryID)">
-                        <option selected value="0">Chọn loại hàng</option>
-                        @foreach (var p in SV21T1020620.BusinessLayers.CommonDataService.ListOfCategories(out int rowCount, Model.Page, Model.PageSize, Model.SearchValue))
+                        <option value="">-- Chọn loại hàng --</option>
+                        @foreach (var category in SV21T1020620.BusinessLayers.CommonDataService.ListOfCategories(out int rowCount, Model.Page, Model.PageSize, Model.SearchValue))
                         {
-                            if (p.CategoryID == Model.CategoryID)
+                            if (category.CategoryID == Model.CategoryID)
                             {
-                                <option selected value="@p.CategoryID">@p.CategoryName</option>
+                                <option selected value="@category.CategoryID">@category.CategoryName</option>
                             }
                             else
                             {
-                                <option value="@p.CategoryID">@p.CategoryName</option>
+                                <option value="@category.CategoryID">@category.CategoryName</option>
                             }
                         }
                     </select>
@@ -28,28 +28,27 @@
                 <div class="col-sm-3">
                     <label>Nhà cung cấp:</label>
                     <select class="form-control" name="@nameof(Model.SupplierID)">
-                        <option selected value="0">Chọn nhà cung cấp</option>
-                        @foreach (var s in SV21T1020620.BusinessLayers.CommonDataService.ListOfSuppliers(out int rowCount, Model.Page, Model.PageSize, Model.SearchValue))
+                        <option value="">-- Chọn nhà cung cấp --</option>
+                        @foreach (var supplier in SV21T1020620.BusinessLayers.CommonDataService.ListOfSuppliers(out int rowCount, Model.Page, Model.PageSize, Model.SearchValue))
                         {
-                            if (s.SupplierID == Model.SupplierID)
+                            if (supplier.SupplierID == Model.SupplierID)
                             {
-                                <option selected value="@s.SupplierID">@s.SupplierName</option>
+                                <option selected value="@supplier.SupplierID">@supplier.SupplierName</option>
                             }
                             else
                             {
-                                <option value="@s.SupplierID">@s.SupplierName</option>
+                                <option value="@supplier.SupplierID">@supplier.SupplierName</option>
                             }
-
                         }
                     </select>
                 </div>
                 <div class="col-sm-1">
                     <label>Giá từ:</label>
-                    <input type="text" class="form-control" name="@nameof(Model.MinPrice)" value="@Model.MinPrice">
+                    <input type="text" class="form-control number-separator" name="@nameof(Model.MinPrice)" value="@Model.MinPrice.ToString("N0")">
                 </div>
                 <div class="col-sm-1">
                     <label>đến:</label>
-                    <input type="text" class="form-control" name="@nameof(Model.MaxPrice)" value="@Model.MaxPrice">
+                    <input type="text" class="form-control number-separator" name="@nameof(Model.MaxPrice)" value="@Model.MaxPrice.ToString("N0")">
                 </div>
                 <div class="col-sm-4">
                     <label>Tên mặt hàng cần tìm:</label>
@@ -67,12 +66,11 @@
                 </div>
             </div>
         </form>
-        <!-- Hiển thị kết quả tìm kiếm (dữ liệu)-->
+        <!--Hiển thị kết quả tìm kiếm (dữ liệu)-->
         <div id="searchResult">
         </div>
     </div>
 </div>
-
 @section scripts {
     <script>
         function doSearch(page) {
@@ -98,7 +96,14 @@
                 e.preventDefault();
                 doSearch(1);
             });
+            $(".number-separator").inputmask({
+                alias: "numeric",
+                groupSeparator: ",",
+                autoGroup: true,
+                digits: 0,
+                rightAlign: false,
+                removeMaskOnSubmit: true
+            });
         });
-
     </script>
 }

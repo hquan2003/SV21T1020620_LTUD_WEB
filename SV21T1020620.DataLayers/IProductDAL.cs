@@ -2,33 +2,34 @@
 
 namespace SV21T1020620.DataLayers
 {
-    public interface IProductDAL<T> where T : class
+    public interface IProductDAL
     {
         /// <summary>
-        /// Tìm kiếm và lấy danh sách dưới dạng phân trang
+        /// Tìm kiếm và lấy danh sách mặt hàng dưới dạng phân trang
         /// </summary>
         /// <param name="page">Trang cần hiển thị</param>
-        /// <param name="pageSize">Số dòng trên mỗi trang (0 nếu không phân trang)</param>
+        /// <param name="PageSize">Số dòng trên mỗi trang (0 nếu không phân trang)</param>
         /// <param name="searchValue">Tên mặt hàng cần tìm (chuỗi rỗng nếu không tìm kiếm)</param>
         /// <param name="categoryID">Mã loại hàng cần tìm (0 nếu không tìm theo loại hàng)</param>
         /// <param name="supplierID">Mã nhà cung cấp cần tìm (0 nếu không tìm theo nhà cung cấp)</param>
         /// <param name="minPrice">Mức giá nhỏ nhất trong khoảng giá cần tìm</param>
-        /// <param name="maxPrice">Mức giá lớn nhất trong khoảng giá cần tìm(0 nếu không hạn chế mức giá lớn hơn)</param>
+        /// <param name="maxPrice">Mức giá lơn nhất trong khoảng giá cần tìm (0 nếu không hạn chế mức giá lớn nhất)</param>
         /// <returns></returns>
-        List<Product> List(int page = 1, int pageSize = 0, string searchValue = "", int categoryID = 0, int supplierID = 0,
-                                decimal minPrice = 0, decimal maxPrice = 0);
+        List<Product> List(int page = 1, int PageSize = 0,
+            string searchValue = "", int categoryID = 0,
+            int supplierID = 0, decimal minPrice = 0, decimal maxPrice = 0);
         /// <summary>
-        /// Đếm số lượng mặt hàng tìm kiếm được
+        /// Ddeeems số lượng mặt hàng tìm kiếm được
         /// </summary>
         /// <param name="searchValue">Tên mặt hàng cần tìm (chuỗi rỗng nếu không tìm kiếm)</param>
-        /// <param name="categoryID">Mã loại hàng cần tìm kiếm (0 nếu không tìm theo loại hàng)</param>
+        /// <param name="categoryID">Mã loại hàng cần tìm (0 nếu không tìm theo loại hàng)</param>
         /// <param name="supplierID">Mã nhà cung cấp cần tìm (0 nếu không tìm theo nhà cung cấp)</param>
-        /// <param name="minPrice">Mức giá giỏ nhất trong khoảng giá cần tìm</param>
-        /// <param name="maxPrice">Mức giá lớn nhất trong khoảng giá cần tìm (0 nếu không hạn chế mức giá lớn nhất)</param>
+        /// <param name="minPrice">Mức giá nhỏ nhất trong khoảng giá cần tìm</param>
+        /// <param name="maxPrice">Mức giá lơn nhất trong khoảng giá cần tìm (0 nếu không hạn chế mức giá lớn nhất)</param>
         /// <returns></returns>
         int Count(string searchValue = "", int categoryID = 0, int supplierID = 0, decimal minPrice = 0, decimal maxPrice = 0);
         /// <summary>
-        /// Lấy thông tin mặt hàng theo mã
+        /// Lấy thông tin mặt hàng theo mã hàng
         /// </summary>
         /// <param name="productID"></param>
         /// <returns></returns>
@@ -58,7 +59,7 @@ namespace SV21T1020620.DataLayers
         /// <returns></returns>
         bool InUsed(int productID);
         /// <summary>
-        /// Lấy danh sách ảnh của mặt hàng (sắp xếp theo thứ tự của DisplayOrder)
+        /// Lấy danh sách ảnh của mặt hàng
         /// </summary>
         /// <param name="productID"></param>
         /// <returns></returns>
@@ -70,7 +71,7 @@ namespace SV21T1020620.DataLayers
         /// <returns></returns>
         ProductPhoto? GetPhoto(long photoID);
         /// <summary>
-        /// Bổ sung ảnh cho mặt hàng (hàm trả về mã của ảnh được bổ sung)
+        /// Bổ sung 1 ảnh cho mặt hàng (hàm trả về mã của ảnh được bổ sung)
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>

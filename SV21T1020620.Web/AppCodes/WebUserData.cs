@@ -25,7 +25,7 @@ namespace SV21T1020620.Web
                 {
                     new Claim(nameof(UserId), UserId),
                     new Claim(nameof(UserName), UserName),
-                    new Claim(nameof(DisplayName), UserName),
+                    new Claim(nameof(DisplayName), DisplayName),
                     new Claim(nameof(Photo), Photo)
                 };
                 if (Roles != null)
