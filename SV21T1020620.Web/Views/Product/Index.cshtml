@@ -14,7 +14,14 @@
                         <option selected value="0">Chọn loại hàng</option>
                         @foreach (var p in SV21T1020620.BusinessLayers.CommonDataService.ListOfCategories(out int rowCount, Model.Page, Model.PageSize, Model.SearchValue))
                         {
-                            <option value="@Model.CategoryID">@p.CategoryName</option>
+                            if (p.CategoryID == Model.CategoryID)
+                            {
+                                <option selected value="@p.CategoryID">@p.CategoryName</option>
+                            }
+                            else
+                            {
+                                <option value="@p.CategoryID">@p.CategoryName</option>
+                            }
                         }
                     </select>
                 </div>
@@ -22,9 +29,17 @@
                     <label>Nhà cung cấp:</label>
                     <select class="form-control" name="@nameof(Model.SupplierID)">
                         <option selected value="0">Chọn nhà cung cấp</option>
-                        @foreach (var p in SV21T1020620.BusinessLayers.CommonDataService.ListOfSuppliers(out int rowCount, Model.Page, Model.PageSize, Model.SearchValue))
+                        @foreach (var s in SV21T1020620.BusinessLayers.CommonDataService.ListOfSuppliers(out int rowCount, Model.Page, Model.PageSize, Model.SearchValue))
                         {
-                            <option value="@Model.SupplierID">@p.SupplierName</option>
+                            if (s.SupplierID == Model.SupplierID)
+                            {
+                                <option selected value="@s.SupplierID">@s.SupplierName</option>
+                            }
+                            else
+                            {
+                                <option value="@s.SupplierID">@s.SupplierName</option>
+                            }
+
                         }
                     </select>
                 </div>

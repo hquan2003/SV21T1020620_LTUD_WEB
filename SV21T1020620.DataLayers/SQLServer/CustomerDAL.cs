@@ -91,7 +91,15 @@ namespace SV21T1020620.DataLayers.SQLServer
 
         public List<Customer> GetAll()
         {
-            throw new NotImplementedException();
+            List<Customer> list = new List<Customer>();
+            using (var conn = OpenConnection())
+            {
+                String sql = @"select * from Customers "
+;
+                list = conn.Query<Customer>(sql: sql, commandType: System.Data.CommandType.Text).ToList();
+                conn.Close();
+            }
+            return list;
         }
 
         public bool InUsed(int id)

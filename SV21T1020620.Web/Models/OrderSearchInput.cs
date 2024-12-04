@@ -20,6 +20,7 @@
             }
         }
         public DateTime? ToTime
+
         {
             get
             {
@@ -30,7 +31,7 @@
                 {
                     DateTime? value = times[1].Trim().ToDateTime();
                     if (value.HasValue)
-                        value = value.Value.AddMilliseconds(86399998); //86399999
+                        value = value.Value.AddMilliseconds(86399998);
                     return value;
                 }
                 return null;

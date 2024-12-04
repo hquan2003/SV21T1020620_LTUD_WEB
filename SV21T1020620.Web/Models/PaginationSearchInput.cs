@@ -17,6 +17,5 @@
         /// Chuỗi giá trị cần tìm kiếm
         /// </summary>
         public string SearchValue { get; set; } = "";
-
     }
 }

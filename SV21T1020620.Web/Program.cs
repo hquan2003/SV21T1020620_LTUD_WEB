@@ -16,10 +16,10 @@ namespace SV21T1020620.Web
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                             .AddCookie(option =>
                             {
-                                option.Cookie.Name = "AuthenticationCookie";
-                                option.LoginPath = "/Account/Login";
-                                option.AccessDeniedPath = "/Account/AccessDenined";
-                                option.ExpireTimeSpan = TimeSpan.FromDays(360);
+                                option.Cookie.Name = "AuthenticationCookie";            //Tên Cookie
+                                option.LoginPath = "/Account/Login";                    //URL trang đăng nhập
+                                option.AccessDeniedPath = "/Account/AccessDenined";     //URL đến trang cấm truy cập
+                                option.ExpireTimeSpan = TimeSpan.FromDays(360);         //Thời gian 'sống' của Cookie
                             });
             builder.Services.AddSession(option =>
             {

@@ -1,6 +1,4 @@
-﻿using SV21T1020620.DomainModels;
-
-namespace SV21T1020620.Web.Models
+﻿namespace SV21T1020620.Web.Models
 {
     public abstract class PaginationSearchResult
     {
@@ -22,41 +20,5 @@ namespace SV21T1020620.Web.Models
                 return c;
             }
         }
-    }
-
-    public class CustomerSearchResult : PaginationSearchResult
-    {
-        public required List<Customer> Data { get; set; }
-    }
-    public class SupplierSearchResult : PaginationSearchResult
-    {
-        public required List<Supplier> Data { get; set; }
-    }
-    public class EmployeeSearchResult : PaginationSearchResult
-    {
-        public required List<Employee> Data { get; set; }
-    }
-    public class CategorySearchResult : PaginationSearchResult
-    {
-        public required List<Category> Data { get; set; }
-    }
-    public class ShipperSearchResult : PaginationSearchResult
-    {
-        public required List<Shipper> Data { get; set; }
-    }
-    public class ProductSearchResult : PaginationSearchResult
-    {
-        public int CategoryID { get; set; } = 0;
-        public int SupplierID { get; set; } = 0;
-        public decimal MinPrice { get; set; } = 0;
-        public decimal MaxPrice { get; set; } = 0;
-        public required List<Product> Data { get; set; }
-    }
-    public class OrderSearchResult : PaginationSearchResult
-    {
-        public int Status { get; set; } = 0;
-        public string TimeRange { get; set; } = "";
-        public List<Order> Data { get; set; } = new List<Order>();
-
     }
 }

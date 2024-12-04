@@ -1,10 +1,9 @@
 ﻿@{
     Layout = null;
 }
-
 <div class="modal-dialog">
     <div class="modal-content">
-        <form action="~/Order/Shipping/111" method="post">
+        <form action="~/Order/Shipping/@Model" method="post">
             <div class="modal-header bg-primary">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                 <h4 class="modal-title">Chuyển giao hàng cho đơn hàng</h4>
@@ -14,10 +13,12 @@
                     <label class="control-label">Người giao hàng:</label>
                     <select class="form-control" name="shipperID">
                         <option value="0">-- Chọn người giao hàng ---</option>
-                        <option value="1">Giao hàng Tiết kiệm</option>
-                        <option value="2">Tín Thành</option>
-                        <option value="3">Viettel Express</option>
+                        @foreach (var item in SV21T1020620.BusinessLayers.CommonDataService.ListOfShippers(out int a, 0, 0, ""))
+                        {
+                            <option value="@item.ShipperID">@item.ShipperName</option>
+                        }
                     </select>
+                    @Html.ValidationMessage("shipperID");
                 </div>
             </div>
             <div class="modal-footer">

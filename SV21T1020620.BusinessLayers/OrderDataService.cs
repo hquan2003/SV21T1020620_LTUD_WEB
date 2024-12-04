@@ -14,15 +14,16 @@ namespace SV21T1020620.BusinessLayers
         static OrderDataService()
         {
             string connectionString = Configuration.ConnectionString;
+
             orderDB = new OrderDAL(connectionString);
-            //orderDB = new OrderDAL(Configuration.ConnectionString);
         }
         /// <summary>
         /// Tìm kiếm và lấy danh sách đơn hàng dưới dạng phân trang
         /// </summary>
         public static List<Order> ListOrders(out int rowCount, int page = 1, int pageSize = 0,
-                                            int status = 0, DateTime? fromTime = null, DateTime? toTime = null,
-                                            string searchValue = "")
+        int status = 0, DateTime? fromTime = null, DateTime? toTime = null,
+
+        string searchValue = "")
         {
             rowCount = orderDB.Count(status, fromTime, toTime, searchValue);
             return orderDB.List(page, pageSize, status, fromTime, toTime, searchValue).ToList();
@@ -39,7 +40,6 @@ namespace SV21T1020620.BusinessLayers
         /// Hàm trả về mã của đơn hàng được tạo mới
         /// </summary>
         public static int InitOrder(int employeeID, int customerID,
-
         string deliveryProvince, string deliveryAddress,
         IEnumerable<OrderDetail> details)
 

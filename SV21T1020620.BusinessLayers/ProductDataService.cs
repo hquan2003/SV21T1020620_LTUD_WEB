@@ -9,10 +9,7 @@ namespace SV21T1020620.BusinessLayers
         private static readonly IProductDAL<Product> productDB;
         static ProductDataService()
         {
-            string connectionString = Configuration.ConnectionString;
-            productDB = new ProductDAL(connectionString);
-          
-
+            productDB = new ProductDAL(Configuration.ConnectionString);
         }
         public static List<Product> ListProducts(out int rowCount, int page = 1, int pageSize = 0,
                                                  string searchValue = "", int categoryId = 0, int supplierId = 0,
@@ -21,7 +18,7 @@ namespace SV21T1020620.BusinessLayers
             rowCount = productDB.Count(searchValue, categoryId, supplierId, minPrice, maxPrice);
             return productDB.List(page, pageSize, searchValue, categoryId, supplierId, minPrice, maxPrice);
         }
-        public static Product GetProductById(int productId)
+        public static Product? GetProductById(int productId)
         {
             return productDB.Get(productId);
         }
@@ -53,9 +50,9 @@ namespace SV21T1020620.BusinessLayers
         {
             return productDB.UpdateAttribute(data);
         }
-        public static ProductAttribute GetProductAttributeByID(int productID)
+        public static ProductAttribute? GetProductAttributeByID(long attributeID)
         {
-            return productDB.GetAttribute(productID);
+            return productDB.GetAttribute(attributeID);
         }
         public static bool DeleteAttributeByID(long attributeID)
         {
@@ -73,7 +70,7 @@ namespace SV21T1020620.BusinessLayers
         {
             return productDB.UpdatePhoto(data);
         }
-        public static ProductPhoto GetProductPhotoByID(long photoID)
+        public static ProductPhoto? GetProductPhotoByID(long photoID)
         {
             return productDB.GetPhoto(photoID);
         }

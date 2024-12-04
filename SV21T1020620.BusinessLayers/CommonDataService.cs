@@ -286,5 +286,9 @@ namespace SV21T1020620.BusinessLayers
         {
             return supplierDB.GetAll();
         }
+        public static List<Customer> GetAllCustomer()
+        {
+            return customerDB.GetAll();
+        }
     }
 }

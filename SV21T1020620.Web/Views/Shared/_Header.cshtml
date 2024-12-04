@@ -18,31 +18,37 @@
 
         <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">
-                <li class="dropdown user user-menu">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <img src="https://p16-sign-sg.tiktokcdn.com/tos-alisg-i-photomode-sg/5cc12c3e7bd44cfe8ad0ae3efe2ab8d0~tplv-photomode-image-new-lqen:q75.jpeg?dr=10825&nonce=43424&refresh_token=9e5850799e59abfed81196baebe9eed1&x-expires=1729184400&x-signature=8MbZCLBiU%2BQytw2ad3UDv3PazCo%3D&biz_tag=tt_photomode&idc=maliva&ps=28cf8ac7&s=AWEME_DETAIL&sc=image&shcp=1d1a97fc&shp=d05b14bd&t=5897f7ec" class="user-image" alt="User Image">
-                        <span class="hidden-xs">Huỳnh Quân</span>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <!-- User image -->
-                        <li class="user-header">
-                            <img src="https://p16-sign-sg.tiktokcdn.com/tos-alisg-i-photomode-sg/5cc12c3e7bd44cfe8ad0ae3efe2ab8d0~tplv-photomode-image-new-lqen:q75.jpeg?dr=10825&nonce=43424&refresh_token=9e5850799e59abfed81196baebe9eed1&x-expires=1729184400&x-signature=8MbZCLBiU%2BQytw2ad3UDv3PazCo%3D&biz_tag=tt_photomode&idc=maliva&ps=28cf8ac7&s=AWEME_DETAIL&sc=image&shcp=1d1a97fc&shp=d05b14bd&t=5897f7ec" class="img-circle" alt="User Image">
+                @{
+                    var userData = User.GetUserData();
+                    if(userData != null)
+                    {
+                        <li class="dropdown user user-menu">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <img src="~/images/employees/@userData.Photo" class="user-image" alt="User Image">
+                                <span class="hidden-xs">@userData.DisplayName</span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <!-- User image -->
+                                <li class="user-header">
+                                    <img src="~/images/employees/@userData.Photo" class="img-circle" alt="User Image">
 
-                            <p>
-                                Huỳnh Quân
-                            </p>
+                                    <p>
+                                        @userData.DisplayName
+                                    </p>
+                                </li>
+                                <!-- Menu Footer-->
+                                <li class="user-footer">
+                                    <div class="pull-left">
+                                        <a href="~/Account/ChangePassword" class="btn btn-default btn-flat">Đổi mật khẩu</a>
+                                    </div>
+                                    <div class="pull-right">
+                                        <a href="~/Account/Logout" class="btn btn-default btn-flat">Thoát</a>
+                                    </div>
+                                </li>
+                            </ul>
                         </li>
-                        <!-- Menu Footer-->
-                        <li class="user-footer">
-                            <div class="pull-left">
-                                <a href="~/Account/ChangePassword" class="btn btn-default btn-flat">Đổi mật khẩu</a>
-                            </div>
-                            <div class="pull-right">
-                                <a href="~/Account/Logout" class="btn btn-default btn-flat">Thoát</a>
-                            </div>
-                        </li>
-                    </ul>
-                </li>
+                    }
+                }      
             </ul>
         </div>
     </nav>

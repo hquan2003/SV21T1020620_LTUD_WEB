@@ -1,6 +1,4 @@
-﻿using SV21T1020620.DomainModels;
-
-namespace SV21T1020620.DataLayers
+﻿namespace SV21T1020620.DataLayers
 {
     /// <summary>
     /// Định nghĩa các phép sử lý dữ liệu thường dùng trên bảng ( Customers, Employees,Shippers,... )

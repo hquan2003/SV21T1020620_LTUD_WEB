@@ -1,12 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SV21T1020620.BusinessLayers;
 using SV21T1020620.DomainModels;
 using SV21T1020620.Web.Models;
-using System;
-using System.Numerics;
 
 namespace SV21T1020620.Web.Controllers
 {
+    [Authorize(Roles = $"{WebUserRoles.ADMINISTRATOR},{WebUserRoles.EMPLOYEE}")]
     public class ProductController : Controller
     {
         private const int PAGE_SIZE = 30;
@@ -35,7 +35,7 @@ namespace SV21T1020620.Web.Controllers
             {
                 Page = condition.Page,
                 PageSize = condition.PageSize,
-                SearchValue = condition.SearchValue,
+                SearchValue = condition.SearchValue ?? "",
                 RowCount = rowCount,
                 CategoryID = condition.CategoryID,
                 SupplierID = condition.SupplierID,
@@ -91,24 +91,24 @@ namespace SV21T1020620.Web.Controllers
                     {
                         PhotoID = 0,
                         DisplayOrder = 0,
+                        Photo = "nophotoo.png",
                         ProductID = id
                     };
                     return View(data);
                 case "edit":
                     ViewBag.Title = "Cập nhật ảnh cho mặt hàng";
-                    var md = ProductDataService.GetProductPhotoByID(photoid);
-                    if (md == null)
+                    var photo = ProductDataService.GetProductPhotoByID(photoid);
+                    if (photo == null)
                         return RedirectToAction("Edit");
-                    return View(md);
+                    return View(photo);
                 case "delete":
-                    //TODO: Xóa ảnh có mã photoID (Xóa trực tiếp, không cần phải xác nhận)
                     ProductDataService.DeletePhotoByID(photoid);
                     return RedirectToAction("Edit", new { id = id });
                 default:
                     return RedirectToAction("Index");
             }
         }
-        public IActionResult Attribute(int id = 0, string method = "", int attribute = 0)
+        public IActionResult Attribute(int id = 0, string method = "", long attributeID = 0)
         {
             switch (method)
             {
@@ -124,21 +124,20 @@ namespace SV21T1020620.Web.Controllers
                     return View(data);
                 case "edit":
                     ViewBag.Title = "Cập nhật thuộc tính của mặt hàng";
-                    var md = ProductDataService.GetProductAttributeByID(attribute);
-                    if (md == null)
+                    var Attribute = ProductDataService.GetProductAttributeByID(attributeID);
+                    if (Attribute == null)
                         return RedirectToAction("Edit");
-                    return View(md);
+                    return View(Attribute);
                 case "delete":
-                    ProductDataService.DeleteAttributeByID(attribute);
+                    ProductDataService.DeleteAttributeByID(attributeID);
                     return RedirectToAction("Edit", new { id = id });
                 default:
                     return RedirectToAction("Index");
-
             }
         }
         public IActionResult Save(Product data, IFormFile? _Photo)
         {
-            ViewBag.Title = data.ProductID == 0 ? "Bổ sung khách hàng" : "Cập nhật khách hàng";
+            ViewBag.Title = data.ProductID == 0 ? "Bổ sung mặt hàng" : "Cập nhật mặt hàng";
             decimal _Price = Convert.ToDecimal(data.Price);
             int _CategoryID = Convert.ToInt32(data.CategoryID);
             int _SupplỉeiD = Convert.ToInt32(data.SupplierID);
@@ -175,7 +174,7 @@ namespace SV21T1020620.Web.Controllers
                     int id = ProductDataService.AddProduct(data);
                     if (id <= 0)
                     {
-                        ModelState.AddModelError("Existed", "Mặt hàng đã tồn tai!");
+                        ModelState.AddModelError("existed", "Mặt hàng đã tồn tai!");
                         return View("Edit", data);
                     }
                 }
@@ -192,7 +191,6 @@ namespace SV21T1020620.Web.Controllers
             }
             catch (Exception ex)
             {
-                //
                 ModelState.AddModelError("error", "Hệ thống bị gián đoạn");
                 return View("Edit", data);
             }
@@ -218,7 +216,7 @@ namespace SV21T1020620.Web.Controllers
             if (_Photo != null)
             {
                 string fileName = $"{DateTime.Now.Ticks}_{_Photo.FileName}";
-                string filePath = Path.Combine(ApplicationContext.HostEnviroment.WebRootPath, @"images\productphotos", fileName);
+                string filePath = Path.Combine(ApplicationContext.WebRootPath, @"images\productphotos", fileName);
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
                     _Photo.CopyTo(stream);
@@ -243,7 +241,7 @@ namespace SV21T1020620.Web.Controllers
                     return View("Edit", data);
                 }
             }
-            return RedirectToAction("Edit");
+            return RedirectToAction("Edit", new { id = data.ProductID });
 
         }
         public IActionResult SaveAttribute(ProductAttribute data)
@@ -271,7 +269,7 @@ namespace SV21T1020620.Web.Controllers
                 if (id <= 0)
                 {
                     ViewBag.Title = "Bổ sung thuộc tính của mặt hàng";
-                    return View("Attribute", data);
+                    return View("Edit", data);
                 }
             }
             else
@@ -280,10 +278,10 @@ namespace SV21T1020620.Web.Controllers
                 if (!result)
                 {
                     ViewBag.Title = "Cập nhật thông tin thuộc tính của ảnh mặt hàng";
-                    return View("Attribute", data);
+                    return View("Edit", data);
                 }
             }
-            return RedirectToAction("Edit");
+            return RedirectToAction("Edit", new { id = data.ProductID });
         }
     }
 }
