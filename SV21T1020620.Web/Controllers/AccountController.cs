@@ -70,5 +70,10 @@ namespace SV21T1020620.Web.Controllers
         {
             return View();
         }
+        public async Task<IActionResult> SavePassword(string userName = "", string oldPassword = "", string newPassword = "")
+        {
+            UserAccountService.ChangePassword(userName, oldPassword, newPassword);
+            return RedirectToAction("Logout");
+        }
     }
 }

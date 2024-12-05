@@ -199,7 +199,9 @@ namespace SV21T1020620.Web.Controllers
             {
                 return Json("Vui lòng nhập đầy đủ thông tin khách hàng và nơi giao hàng");
             }
-            int employeeID = 1; //TODO: Thay bởi ID của nhân viên đang login vào hệ thống
+
+            //int employeeID = 1; //TODO: Thay bởi ID của nhân viên đang login vào hệ thống
+            int employeeID = Convert.ToInt32(User.GetUserData()?.UserId);
 
             List<OrderDetail> orderDetails = new List<OrderDetail>();
             foreach (var item in shoppingCart)

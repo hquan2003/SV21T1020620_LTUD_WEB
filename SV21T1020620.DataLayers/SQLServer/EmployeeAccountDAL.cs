@@ -31,7 +31,7 @@ namespace SV21T1020620.DataLayers.SQLServer
             return data;
         }
 
-        public bool ChangePassword(string username, string password)
+        public bool ChangePassword(string userName, string oldPassword, string newPassword)
         {
             throw new NotImplementedException();
         }

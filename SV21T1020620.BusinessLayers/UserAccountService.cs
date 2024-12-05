@@ -22,6 +22,10 @@ namespace SV21T1020620.BusinessLayers
             else
                 return customerAccountDB.Authorize(username, password);
         }
+        public static bool ChangePassword(string userName, string oldPassword, string newPassword)
+        {
+            return employeeAccountDB.ChangePassword(userName, oldPassword, newPassword);
+        }
     }
     /// <summary>
     /// 

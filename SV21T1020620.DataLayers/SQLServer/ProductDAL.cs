@@ -273,7 +273,7 @@ b                           else
                         ";
                 var parameters = new
                 {
-                    Page = page,                // Bên trái: tên của tham số trong câu lẹnh của SQL, Bên phải: giá trị truyền cho tham số
+                    Page = page,        
                     PageSize = PageSize,
                     SearchValue = searchValue,
                     CategoryID = categoryID,
