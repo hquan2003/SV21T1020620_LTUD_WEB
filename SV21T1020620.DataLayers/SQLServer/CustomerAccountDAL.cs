@@ -1,9 +1,4 @@
 ﻿using SV21T1020620.DomainModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SV21T1020620.DataLayers.SQLServer
 {
@@ -18,7 +13,7 @@ namespace SV21T1020620.DataLayers.SQLServer
             throw new NotImplementedException();
         }
 
-        public bool ChangePassword(string userName, string oldPassword, string newPassword)
+        public bool ChangePassword(string username, string password)
         {
             throw new NotImplementedException();
         }

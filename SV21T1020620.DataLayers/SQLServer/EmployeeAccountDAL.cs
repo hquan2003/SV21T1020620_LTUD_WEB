@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using SV21T1020620.DomainModels;
+using System.Data;
 
 namespace SV21T1020620.DataLayers.SQLServer
 {
@@ -9,31 +10,54 @@ namespace SV21T1020620.DataLayers.SQLServer
         {
         }
 
-        public UserAccount? Authorize(string username, string password)
+        public bool ChangePassword(string username, string password)
         {
-            UserAccount? data = null;
             using (var connection = OpenConnection())
             {
-                var sql = @"select EmployeeID AS UserID,
-                                    Email AS UserName,
-                                    FullName AS DisplayName,
-                                    Photo,
-                                    RoleNames
-                            from Employees where Email = @Email and Password = @Password";
+                // Query cập nhật mật khẩu
+                var sql = @"
+                    UPDATE Employees
+                    SET Password = @Password
+                    WHERE Email = @Email";
+
                 var parameters = new
                 {
                     Email = username,
                     Password = password
                 };
-                data = connection.QueryFirstOrDefault<UserAccount>(sql: sql, param: parameters, commandType: System.Data.CommandType.Text);
-            }
 
-            return data;
+                // Thực thi câu lệnh và kiểm tra kết quả
+                int rowsAffected = connection.Execute(sql: sql, param: parameters, commandType: CommandType.Text);
+                connection.Close();
+
+                return rowsAffected > 0; // Trả về true nếu có dòng bị ảnh hưởng
+            }
         }
 
-        public bool ChangePassword(string userName, string oldPassword, string newPassword)
+        public UserAccount? Authorize(string username, string password)
         {
-            throw new NotImplementedException();
+            UserAccount? data = null;
+            using (var connection = OpenConnection())
+            {
+                var sql = @"
+                            SELECT 
+                                EmployeeID AS UserId, 
+                                Email AS UserName, 
+                                FullName AS DisplayName, 
+                                Photo, 
+                                RoleNames 
+                            FROM Employees 
+                            WHERE Email = @Email AND Password = @Password";
+
+                var parameters = new
+                {
+                    Email = username,
+                    Password = password
+                };
+                data = connection.QueryFirstOrDefault<UserAccount>(sql: sql, param: parameters, commandType: CommandType.Text);
+                connection.Close();
+            }
+            return data;
         }
     }
 }

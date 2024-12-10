@@ -1,9 +1,4 @@
 ﻿using SV21T1020620.DomainModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SV21T1020620.DataLayers
 {
@@ -22,6 +17,6 @@ namespace SV21T1020620.DataLayers
         /// <param name="username"></param>
         /// <param name="password"></param>
         /// <returns></returns>
-        bool ChangePassword(string userName, string oldPassword, string newPassword);
+        bool ChangePassword(string username, string password);
     }
 }

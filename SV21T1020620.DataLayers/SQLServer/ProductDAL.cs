@@ -101,7 +101,7 @@ b                           else
         public int Count(string searchValue = "", int categoryID = 0, int supplierID = 0, decimal minPrice = 0, decimal maxPrice = 0)
         {
             int count = 0;
-            searchValue = $"%{searchValue}";
+            searchValue = $"%{searchValue}%";
             using (var connection = OpenConnection())
             {
                 var sql = @"
@@ -200,9 +200,7 @@ b                           else
             ProductAttribute? data = null;
             using (var connection = OpenConnection())
             {
-                var sql = @"
-                             select * from ProductAttributes where AttributeID = @AttributeID                  
-                            ";
+                var sql = @"select * from ProductAttributes where AttributeID = @AttributeID";
                 var parameters = new
                 {
                     AttributeID = attributeID
@@ -253,7 +251,7 @@ b                           else
         public List<Product> List(int page = 1, int PageSize = 0, string searchValue = "", int categoryID = 0, int supplierID = 0, decimal minPrice = 0, decimal maxPrice = 0)
         {
             List<Product> data = new List<Product>();
-            searchValue = $"%{searchValue}";
+            searchValue = $"%{searchValue}%";
             using (var connection = OpenConnection())
             {
                 var sql = @"select *

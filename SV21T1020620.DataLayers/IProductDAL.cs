@@ -19,7 +19,7 @@ namespace SV21T1020620.DataLayers
             string searchValue = "", int categoryID = 0,
             int supplierID = 0, decimal minPrice = 0, decimal maxPrice = 0);
         /// <summary>
-        /// Ddeeems số lượng mặt hàng tìm kiếm được
+        /// Đếm số lượng mặt hàng tìm kiếm được
         /// </summary>
         /// <param name="searchValue">Tên mặt hàng cần tìm (chuỗi rỗng nếu không tìm kiếm)</param>
         /// <param name="categoryID">Mã loại hàng cần tìm (0 nếu không tìm theo loại hàng)</param>
