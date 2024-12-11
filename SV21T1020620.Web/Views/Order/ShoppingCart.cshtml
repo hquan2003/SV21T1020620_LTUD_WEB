@@ -31,9 +31,7 @@
                     <td class="text-right">@item.SalePrice.ToString("N0")</td>
                     <td class="text-right">@item.TotalPrice.ToString("N0")</td>
                     <td class="text-right">
-                        <a href="~/Order/RemoveFromCart/@item.ProductID"
-                           class="btn btn-xs btn-danger ajax-link"
-                           onclick="return confirm('Xóa mặt hàng @item.ProductName ra khỏi giỏ hàng?')'">
+                        <a href="~/Order/RemoveFromCart/@item.ProductID" class="btn btn-xs btn-danger ajax-link confirm-remove-item" data-product-name="@item.ProductName">
                             <i class="fa fa-minus"></i>
                         </a>
                     </td>
@@ -58,28 +56,40 @@
     </tfoot>
 </table>
 <div class="text-right">
-    <a href="~/Order/ClearCart" class="btn btn-sm btn-danger ajax-link" onclick="return confirm('Có muốn xóa giỏ hàng không?')">
+    <a href="~/Order/ClearCart" class="btn btn-sm btn-danger ajax-link confirm-delete-cart">
         <i class="fa fa-trash"></i> Xóa giỏ hàng
     </a>
 </div>
 
 <script>
     $(document).ready(function () {
-        $(".ajax-link").click(function (e) {
-            e.preventDefault();
+    $(".ajax-link").click(function (e) {
+        if ($(this).hasClass("confirm-delete-cart")) {
+            if (!confirm("Có muốn xóa giỏ hàng không?")) {
+                e.preventDefault();
+                return;
+            }
+        }
+        else if ($(this).hasClass("confirm-remove-item")) {
+            let productName = $(this).data("product-name");
+            if (!confirm("Xóa mặt hàng " + productName + " ra khỏi giỏ hàng?")) {
+                e.preventDefault();
+                return;
+            }
+        }
+        e.preventDefault();
 
-            $.ajax({
-                url: $(this).prop("href"),
-                type: "GET",
-                success: function (data) {
-                    if (data !== "") {
-                        alert(data);
-                    }
-                    else{
-                        showShoppingCart();
-                    }
+        $.ajax({
+            url: $(this).prop("href"),
+            type: "GET",
+            success: function (data) {
+                if (data !== "") {
+                    alert(data);
+                } else {
+                    showShoppingCart();
                 }
-            });
+            }
         });
     });
+});
 </script>

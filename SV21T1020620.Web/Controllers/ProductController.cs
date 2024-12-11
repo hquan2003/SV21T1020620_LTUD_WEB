@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 using SV21T1020620.BusinessLayers;
 using SV21T1020620.DomainModels;
 using SV21T1020620.Web.Models;
