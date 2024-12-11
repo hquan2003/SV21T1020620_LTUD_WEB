@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using SV21T1020620.BusinessLayers;
 using SV21T1020620.DomainModels;
 using SV21T1020620.Web.Models;
@@ -141,14 +142,16 @@ namespace SV21T1020620.Web.Controllers
             ViewBag.Title = data.ProductID == 0 ? "Bổ sung mặt hàng mới" : "Cập nhật thông tin mặt hàng";
 
             if (string.IsNullOrWhiteSpace(data.ProductName))
-                ModelState.AddModelError(nameof(data.ProductName), "Tên không được để trống");
+                ModelState.AddModelError(nameof(data.ProductName), "Tên mặt hàng không được để trống");
+            if (string.IsNullOrWhiteSpace(data.ProductDescription))
+                ModelState.AddModelError(nameof(data.ProductDescription), "Nhập mô tả");
             if (data.CategoryID == 0)
-                ModelState.AddModelError(nameof(data.CategoryID), "Tên không được để trống");
+                ModelState.AddModelError(nameof(data.CategoryID), "Tên loại hàng không được để trống");
             if (data.SupplierID == 0)
-                ModelState.AddModelError(nameof(data.SupplierID), "Tên không được để trống");
+                ModelState.AddModelError(nameof(data.SupplierID), "Tên nhà cung cấp không được để trống");
             if (string.IsNullOrWhiteSpace(data.Unit))
                 ModelState.AddModelError(nameof(data.Unit), "Đơn vị tính không được để trống");
-            if (data.Price < 0)
+            if (data.Price <= 0)
                 ModelState.AddModelError(nameof(data.Price), "Vui lòng nhập giá");
 
 

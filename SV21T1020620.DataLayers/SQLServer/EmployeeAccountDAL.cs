@@ -10,28 +10,24 @@ namespace SV21T1020620.DataLayers.SQLServer
         {
         }
 
-        public bool ChangePassword(string username, string password)
+        public bool ChangePassword(string userName, string oldPassword, string newPassword)
         {
-            using (var connection = OpenConnection())
+            bool result = false;
+            using (var cn = OpenConnection())
             {
-                // Query cập nhật mật khẩu
-                var sql = @"
-                    UPDATE Employees
-                    SET Password = @Password
-                    WHERE Email = @Email";
-
+                var sql = @"update Employees 
+                            set Password = @newPassword 
+                            where Email = @userName and Password = @oldPassword";
                 var parameters = new
                 {
-                    Email = username,
-                    Password = password
+                    userName = userName,
+                    oldPassword = oldPassword,
+                    newPassword = newPassword
                 };
-
-                // Thực thi câu lệnh và kiểm tra kết quả
-                int rowsAffected = connection.Execute(sql: sql, param: parameters, commandType: CommandType.Text);
-                connection.Close();
-
-                return rowsAffected > 0; // Trả về true nếu có dòng bị ảnh hưởng
+                result = cn.Execute(sql: sql, param: parameters, commandType: System.Data.CommandType.Text) > 0;
+                cn.Close();
             }
+            return result;
         }
 
         public UserAccount? Authorize(string username, string password)
