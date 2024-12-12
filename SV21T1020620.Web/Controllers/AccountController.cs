@@ -3,8 +3,6 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SV21T1020620.BusinessLayers;
-using SV21T1020620.DomainModels;
-using System.Data;
 
 namespace SV21T1020620.Web.Controllers
 {
@@ -65,7 +63,7 @@ namespace SV21T1020620.Web.Controllers
             if (Request.Method == "POST")
             {
                 if (confirmPassword.Trim().Equals(newPassword.Trim()) == false)
-                    ModelState.AddModelError("confirmPass", "Xác nhận lại mật khẩu sai");
+                    ModelState.AddModelError("confirmPass", "Mật khẩu không khớp");
                 if (ModelState.IsValid == false)
                 {
                     return View();

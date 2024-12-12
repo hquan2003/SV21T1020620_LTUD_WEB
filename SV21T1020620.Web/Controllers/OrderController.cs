@@ -12,11 +12,9 @@ namespace SV21T1020620.Web.Controllers
     {
         public const string ORDER_SEARCH_CONDITION = "OrderSearchCondition";
         public const int PAGE_SIZE = 20;
-        //Số mặt hàng được hiển thị trên một trang khi tìm kiếm mặt hàng để dựa vào đơn hàng
+
         private const int PRODUCT_PAGE_SIZE = 5;
-        //Tên biến session lưu điều kiện tìm kiếm mặt hàng khi lập đơn hàng
         private const string PRODUCT_SEARCH_CONDITION = "ProductSearchSale";
-        //Tên biến session lưu giỏ hàng
         private const string SHOPPING_CART = "ShoppingCart";
         public IActionResult Index()
         {
