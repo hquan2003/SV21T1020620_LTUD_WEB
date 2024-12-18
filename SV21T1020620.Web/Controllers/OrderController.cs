@@ -79,32 +79,29 @@ namespace SV21T1020620.Web.Controllers
 
             return View(model);
         }
+        [HttpGet]
         public IActionResult EditDetail(int id = 0, int productId = 0)
         {
+            if (productId == 0 || id == 0)
+                return RedirectToAction("Index");
+
+            ViewBag.Title = "Cập nhật chi tiết hóa đơn";
             var data = OrderDataService.GetOrderDetail(id, productId);
             if (data == null)
-            {
                 return RedirectToAction("Index");
-            }
             return View(data);
         }
         [HttpPost]
-        public IActionResult UpdateDetail(int id, OrderDetail data)
+        public IActionResult UpdateDetail(int orderID, int productId, int quantity, decimal salePrice)
         {
-
-            var order = OrderDataService.GetOrder(id);
-
-            if (id > 0)
-            {
-                bool result = OrderDataService.SaveOrderDetail(id, data.ProductID, data.Quantity, data.SalePrice);
-                if (result)
-                {
-                    var details = OrderDataService.ListOrderDetails(id);
-                    var orderDetail = new OrderDetailModel() { Order = order, Details = details };
-                    return View("Details", orderDetail);
-                }
-            }
-            return RedirectToAction("Index");
+            if (quantity <= 0)
+                return Json("Số lượng bán không hợp lệ");
+            if (salePrice < 0)
+                return Json("Giá bán không hợp lệ");
+            bool result = OrderDataService.SaveOrderDetail(orderID, productId, quantity, salePrice);
+            if (!result)
+                return Json("");
+            return Json("");
         }
         public IActionResult Shipping(int id = 0, int shipperID = 0)
         {
@@ -263,7 +260,7 @@ namespace SV21T1020620.Web.Controllers
         {
             if (OrderDataService.DeleteOrderDetail(id, productID))
             {
-                return RedirectToAction("Details");
+                return RedirectToAction("Details", new { id = id });
             }
             else
             {
