@@ -226,4 +226,22 @@
         </table>
     </div>
 </div>
-
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            // doSearch(Model.Page);
+            // $("#frmSearchInput").submit(function (e) {
+            //     e.preventDefault();
+            //     doSearch(1);
+            // });
+            $(".number-separator").inputmask({
+                alias: "numeric",
+                groupSeparator: ",",
+                autoGroup: true,
+                digits: 0,
+                rightAlign: false,
+                removeMaskOnSubmit: true
+            });
+        });
+    </script>
+}

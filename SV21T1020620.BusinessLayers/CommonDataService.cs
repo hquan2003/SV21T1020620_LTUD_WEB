@@ -12,6 +12,7 @@ namespace SV21T1020620.BusinessLayers
         private static readonly ICommonDAL<Supplier> supplierDB;
         private static readonly ICommonDAL<Employee> employeeDB;
         private static readonly ICommonDAL<Category> categoryDB;
+        private static readonly ICommonDAL<CustomerDTO> customerDTO;
         /// <summary>
         /// 
         /// </summary>
@@ -25,6 +26,7 @@ namespace SV21T1020620.BusinessLayers
             supplierDB = new SupplierDAL(connectionString);
             employeeDB = new EmployeeDAL(connectionString);
             categoryDB = new CategoryDAL(connectionString);
+            customerDTO = new DataLayers.SQLServer.CustomerDTO_DAL(connectionString);
         }
 
         public static List<Province> ListOfProvinces()
@@ -289,6 +291,10 @@ namespace SV21T1020620.BusinessLayers
         public static List<Customer> GetAllCustomer()
         {
             return customerDB.GetAll();
+        }
+        public static int AddCustomerDTO(CustomerDTO data)
+        {
+            return customerDTO.Add(data);
         }
     }
 }

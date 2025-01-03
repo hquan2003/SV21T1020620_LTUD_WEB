@@ -1,0 +1,137 @@
+﻿@{
+}
+<!-- Header -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light style="background-color: rgba(0, 0, 0, 0.2);">
+    <div class="container">
+        <a class="navbar-brand" href="/">HQ Shop</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/">Trang chủ</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav mx-auto">
+                @{
+                    var userData = User.GetUserData();
+
+                    @if (userData != null)
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" href="~/Account/Cart">
+                                <i class="bi bi-cart"></i> Giỏ hàng
+                                <span class="badge bg-light text-dark position-relative" style="top: -3px;">@userData.sum</span>
+                            </a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="dropdown-toggle nav-link" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Xin chào: @userData.DisplayName
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                                <li><a class="dropdown-item" href="~/Account/EditProfile">Sửa thông tin cá nhân</a></li>
+                                <li><a class="dropdown-item" href="~/Account/ChangePassword">Đổi mật khẩu</a></li>
+                                <li><a class="dropdown-item" href="~/Account/History">Lịch sử mua hàng</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="~/Account/Logout">Đăng xuất</a></li>
+                            </ul>
+                        </li>
+
+                        <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="editProfileModalLabel">Thông tin cá nhân</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form>
+                                            <div class="mb-3">
+                                                <label for="displayName" class="form-label">Tên hiển thị</label>
+                                                <input type="text" class="form-control" id="displayName" value="@userData.DisplayName">
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                                        <button type="button" class="btn btn-primary">Lưu</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="changePasswordModalLabel">Đổi mật khẩu</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form id="changePasswordForm">
+                                            <div class="mb-3">
+                                                <label for="oldPassword" class="form-label">Mật khẩu cũ</label>
+                                                <input type="password" class="form-control" id="oldPassword">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="newPassword" class="form-label">Mật khẩu mới</label>
+                                                <input type="password" class="form-control" id="newPassword">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="confirmPassword" class="form-label">Xác nhận mật khẩu mới</label>
+                                                <input type="password" class="form-control" id="confirmPassword">
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                                        <button type="button" class="btn btn-primary">Đổi mật khẩu</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <li class="nav-item">
+                            <a href="~/Account/Login" class="btn btn-outline-light text-black">
+                                <i class="bi bi-box-arrow-in-right me-2"></i> Đăng nhập
+                            </a>
+                        </li>
+                    }
+                }
+        </div>
+    </div>
+</nav>
+@section scripts {
+    <script>
+        // Giả sử bạn đang sử dụng jQuery
+        $("#changePasswordForm").submit(function (event) {
+            event.preventDefault();
+
+            var oldPassword = $('#oldPassword').val();
+            var newPassword = $('#newPassword').val();
+            var confirmPassword = $('#confirmPassword').val();
+
+            // Gửi dữ liệu đến server bằng AJAX
+            $.ajax({
+                url: '/Account/ChangePassword', // Đường dẫn đến controller
+                type: 'POST',
+                data: {
+                    oldPassword: oldPassword,
+                    newPassword: newPassword
+                },
+                success: function (response) {
+                    // Xử lý khi đổi mật khẩu thành công
+                    $('#changePasswordModal').modal('hide');
+                    alert('Đổi mật khẩu thành công!');
+                },
+                error: function (error) {
+                    // Xử lý khi có lỗi
+                    alert('Đổi mật khẩu thất bại. Vui lòng thử lại.');
+                }
+            });
+        });
+    </script>
+}

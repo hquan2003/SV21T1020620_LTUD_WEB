@@ -51,8 +51,8 @@ namespace SV21T1020620.Web
                 enviroment: app.Services.GetRequiredService<IWebHostEnvironment>()
                 );
             // khởi tạo cấu hình cho Bussinesslayer
-            string connectióntring = builder.Configuration.GetConnectionString("LiteCommerceDB");
-            SV21T1020620.BusinessLayers.Configuration.Initialize(connectióntring);
+            string connectionString = builder.Configuration.GetConnectionString("LiteCommerceDB");
+            SV21T1020620.BusinessLayers.Configuration.Initialize(connectionString);
             app.Run();
         }
     }

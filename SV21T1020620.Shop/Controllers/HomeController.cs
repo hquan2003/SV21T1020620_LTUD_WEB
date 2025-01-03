@@ -1,11 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
+using SV21T1020620.BusinessLayers;
 using SV21T1020620.Shop.Models;
 using System.Diagnostics;
-
 namespace SV21T1020620.Shop.Controllers
 {
     public class HomeController : Controller
     {
+        private const int PAGE_SIZE = 24;
+        private const string PRODUCT_SEARCH_CONDITON = "ProductSearchCondition";
         private readonly ILogger<HomeController> _logger;
 
         public HomeController(ILogger<HomeController> logger)
@@ -15,12 +17,39 @@ namespace SV21T1020620.Shop.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            
+            ProductSearchInput? condition = ApplicationContext.GetSessionData<ProductSearchInput>(PRODUCT_SEARCH_CONDITON);
+            if (condition == null)
+                condition = new ProductSearchInput
+                {
+                    Page = 1,
+                    PageSize = PAGE_SIZE,
+                    SearchValue = "",
+                    CategoryID = 0,
+                    SupplierID = 0,
+                    MinPrice = 0,
+                    MaxPrice = 0,
+                };
+            return View(condition);
         }
-
-        public IActionResult Privacy()
+        public IActionResult Search(ProductSearchResult condition)
         {
-            return View();
+            int rowCount;
+            var data = ProductDataService.ListProducts(out rowCount, condition.Page, condition.PageSize, condition.SearchValue??"", condition.CategoryID, condition.SupplierID, condition.MinPrice, condition.MaxPrice);
+            ProductSearchResult model = new ProductSearchResult()
+            {
+                Page = condition.Page,
+                PageSize = condition.PageSize,
+                SearchValue = condition.SearchValue ?? "",
+                RowCount = rowCount,
+                CategoryID = condition.CategoryID,
+                SupplierID = condition.SupplierID,
+                MinPrice = condition.MinPrice,
+                MaxPrice = condition.MaxPrice,
+                Data = data
+            };
+            ApplicationContext.SetSessionData(PRODUCT_SEARCH_CONDITON, condition);
+            return View(model);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

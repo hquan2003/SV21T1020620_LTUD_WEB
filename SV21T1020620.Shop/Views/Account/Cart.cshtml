@@ -1,0 +1,37 @@
+﻿@{
+}
+    <div class="container">
+        <h1>Giỏ hàng của bạn</h1>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Sản phẩm</th>
+                    <th>Số lượng</th>
+                    <th>Giá</th>
+                    <th>Thành tiền</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><img src="~/Image/Products/@Model.Photo" alt="Product 1" width="50">@Model.ProductName</td>
+                    <td><input type="number" min="1" value="1"></td>
+                    <td>@Model.Price</td>
+                    <td>@Model.Price</td>
+                    <td><a href="#" class="btn btn-danger">Xóa</a></td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="row">
+            <div class="col-md-8">
+            </div>
+            <div class="col-md-4">
+                <h3>Tổng tiền: <span id="total">0</span>đ</h3>
+                <button class="btn btn-primary">Thanh toán</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        // JavaScript để tính toán tổng tiền, cập nhật số lượng, xóa sản phẩm
+    </script>
+

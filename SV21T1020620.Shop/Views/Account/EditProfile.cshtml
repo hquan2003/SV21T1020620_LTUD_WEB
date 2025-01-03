@@ -1,0 +1,53 @@
+﻿@model SV21T1020620.DomainModels.Customer;
+@{
+    ViewBag.Title = "Sửa Thông Tin";
+}
+<div class="container">
+    <h2>Sửa thông tin cá nhân</h2>
+    <form asp-action="EditProfile" method="post">
+        <input type="hidden" asp-for="CustomerId" />
+
+        <div class="mb-3">
+            <label asp-for="CustomerName" class="form-label">Họ và Tên</label>
+            <input type="text" class="form-control" asp-for="CustomerName" required />
+            <span asp-validation-for="CustomerName" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Email" class="form-label">Email</label>
+            <input type="email" class="form-control" asp-for="Email" required />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Phone" class="form-label">Số điện thoại</label>
+            <input type="text" class="form-control" asp-for="Phone" required />
+            <span asp-validation-for="Phone" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Address" class="form-label">Địa chỉ</label>
+            <input type="text" class="form-control" asp-for="Address" />
+            <span asp-validation-for="Address" class="text-danger"></span>
+        </div>
+
+        <div class="form-group" name="@nameof(Model.Province)">
+            <label>Tỉnh/Thành:</label>
+            <select class="form-control" name="@nameof(Model.Province)">
+                <option value="">--Chọn Tỉnh/Thành--</option>
+                @foreach (var province in SV21T1020620.BusinessLayers.CommonDataService.ListOfProvinces())
+                {
+                    if (province.ProvinceName == Model.Province)
+                    {
+                        <option selected value="@province.ProvinceName">@province.ProvinceName</option>
+                    }
+                    else
+                    {
+                        <option value="@province.ProvinceName">@province.ProvinceName</option>
+                    }
+                }
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+    </form>
+</div>

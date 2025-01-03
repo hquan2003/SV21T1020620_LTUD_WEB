@@ -1,4 +1,6 @@
-﻿using SV21T1020620.DomainModels;
+﻿using Dapper;
+using SV21T1020620.DomainModels;
+using System.Data;
 
 namespace SV21T1020620.DataLayers.SQLServer
 {
@@ -10,12 +12,46 @@ namespace SV21T1020620.DataLayers.SQLServer
 
         public UserAccount? Authorize(string username, string password)
         {
-            throw new NotImplementedException();
+            UserAccount? data = null;
+            using (var connection = OpenConnection())
+            {
+                var sql = @"
+                            SELECT 
+                                CustomerID AS UserId, 
+                                Email AS UserName, 
+                                CustomerName AS DisplayName
+                            FROM Customers 
+                            WHERE Email = @Email AND Password = @Password";
+
+                var parameters = new
+                {
+                    Email = username,
+                    Password = password
+                };
+                data = connection.QueryFirstOrDefault<UserAccount>(sql: sql, param: parameters, commandType: CommandType.Text);
+                connection.Close();
+            }
+            return data;
         }
 
         public bool ChangePassword(string userName, string oldPassword, string newPassword)
         {
-            throw new NotImplementedException();
+            bool result = false;
+            using (var cn = OpenConnection())
+            {
+                var sql = @"update Customers 
+                            set Password = @newPassword 
+                            where Email = @userName and Password = @oldPassword";
+                var parameters = new
+                {
+                    userName = userName,
+                    oldPassword = oldPassword,
+                    newPassword = newPassword
+                };
+                result = cn.Execute(sql: sql, param: parameters, commandType: System.Data.CommandType.Text) > 0;
+                cn.Close();
+            }
+            return result;
         }
     }
 }
