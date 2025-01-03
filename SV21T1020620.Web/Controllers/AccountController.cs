@@ -70,7 +70,7 @@ namespace SV21T1020620.Web.Controllers
                 }
                 else
                 {
-                    var result = UserAccountService.ChangePassword(userName, oldPassword, newPassword);
+                    var result = UserAccountService.ChangePassword(UserAccountService.UserTypes.Employee, userName, oldPassword, newPassword);
                     if (result == true)
                     {
                         return RedirectToAction("Logout");

@@ -20,12 +20,12 @@ namespace SV21T1020620.DataLayers.SQLServer
 
             using (var connection = OpenConnection())
             {
-                var sql = @"insert into Carts(Sum, CustomerID)
-                                    values(@Sum, @CustomerID);
+                var sql = @"insert into Carts(Count, CustomerID)
+                                    values(@Count, @CustomerID);
                                     select SCOPE_IDENTITY();";
                 var parameters = new
                 {
-                    Sum = Cart.Sum,
+                    Count = Cart.Count,
                     CustomerID = Cart.CustomerID
                 };
                 id = connection.ExecuteScalar<int>(sql: sql, param: parameters, commandType: System.Data.CommandType.Text);
@@ -167,11 +167,11 @@ namespace SV21T1020620.DataLayers.SQLServer
 
             using (var connection = OpenConnection())
             {
-                var sql = @"update Carts set Sum = @Sum 
+                var sql = @"update Carts set Count = @Count 
                             where CustomerID = @CustomerID and CartID = @CartID";
                 var parameters = new
                 {
-                    Sum = Cart.Sum,
+                    Count = Cart.Count,
                     CustomerID = Cart.CustomerID,
                     CartID = Cart.CartID
 

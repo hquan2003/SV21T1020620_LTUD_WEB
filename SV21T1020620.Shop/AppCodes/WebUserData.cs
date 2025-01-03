@@ -12,7 +12,7 @@ namespace SV21T1020620.Shop
         public string UserName { get; set; } = "";
         public string DisplayName { get; set; } = "";
         public string Photo { get; set; } = "";
-        public string sum { get; set; }
+        public string count { get; set; }
         public List<string>? Roles { get; set; }
 
         /// <summary>
@@ -28,7 +28,7 @@ namespace SV21T1020620.Shop
                     new Claim(nameof(UserName), UserName),
                     new Claim(nameof(DisplayName), DisplayName),
                     new Claim(nameof(Photo), Photo),
-                    new Claim(nameof(sum), sum)
+                    new Claim(nameof(count), count)
                 };
                 if (Roles != null)
                 {

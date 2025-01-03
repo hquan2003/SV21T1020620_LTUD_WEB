@@ -28,7 +28,7 @@ namespace SV21T1020620.Shop.Controllers
             {
                 var newCart = new Cart();
                 newCart.CustomerID = Convert.ToInt32(customer.UserId);
-                newCart.Sum = 0;
+                newCart.Count = 0;
                 Cart = newCart;
                 CartDataService.AddCart(Cart);
             }
@@ -47,8 +47,8 @@ namespace SV21T1020620.Shop.Controllers
                     data.CartID = Cart.CartID;
                     data.ProductID = product.ProductID;
                     int id = CartDataService.AddCartDetail(data);
-                    int sum = Cart.Sum + 1;
-                    Cart.Sum = sum;
+                    int count = Cart.Count + 1;
+                    Cart.Count = count;
                     bool kq = CartDataService.SaveCart(Cart);
                 }
                 else

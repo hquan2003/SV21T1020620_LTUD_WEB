@@ -8,7 +8,7 @@ namespace SV21T1020620.Shop.Controllers
 {
     public class AccountController : Controller
     {
-        public const string SUM = "sum";
+        public const string Count = "count";
         [HttpGet]
         public IActionResult Login()
         {
@@ -18,21 +18,25 @@ namespace SV21T1020620.Shop.Controllers
         public async Task<IActionResult> Login(string username, string password)
         {
             ViewBag.Username = username;
-            //kiem tra thong tin ddau vao
-            if (string.IsNullOrEmpty(password) || string.IsNullOrEmpty(username))
+            if (string.IsNullOrEmpty(username))
             {
-                ModelState.AddModelError("Error", "Nhập tên và mật khẩu");
+                ModelState.AddModelError("Error", "Vui lòng nhập tên đăng nhập");
+                return View();
+            }
+            if (string.IsNullOrEmpty(password))
+            {
+                ModelState.AddModelError("Error", "Vui lòng nhập mật khẩu");
                 return View();
             }
             var userAccount = UserAccountService.Authorize(UserAccountService.UserTypes.Customer, username, password);
             if (userAccount == null)
             {
-                ModelState.AddModelError("Error", "Dang nhap that bai");
+                ModelState.AddModelError("Error", "Sai tên đăng nhập hoặc mật khẩu");
                 return View();
             }
             string customerID = userAccount.UserId;
-            int sum = 0;
-            sum = SV21T1020620.BusinessLayers.CartDataService.getCartByCustomerID(Convert.ToInt32(customerID)).Sum;
+            int count = 0;
+            count = SV21T1020620.BusinessLayers.CartDataService.getCartByCustomerID(Convert.ToInt32(customerID)).Count;
             // Dang nhap thanh cong:
             var userData = new WebUserData
             {
@@ -40,7 +44,7 @@ namespace SV21T1020620.Shop.Controllers
                 UserName = userAccount.UserName,
                 DisplayName = userAccount.DisplayName,
                 Roles = userAccount.RoleNames.Split(",").ToList(),
-                sum = sum + ""
+                count = count + ""
             };
 
             //
@@ -74,13 +78,13 @@ namespace SV21T1020620.Shop.Controllers
             return View(customer);
         }
         public IActionResult Save(CustomerDTO data)
-        {  
-           int id = CommonDataService.AddCustomerDTO(data);
-           if (id <= 0)
-           {
-              ModelState.AddModelError("Error", "Tài khoản đã tồn tại");
-              return View("Register", data);
-           }
+        {
+            int id = CommonDataService.AddCustomerDTO(data);
+            if (id <= 0)
+            {
+                ModelState.AddModelError("Error", "Tài khoản đã tồn tại");
+                return View("Register", data);
+            }
 
             return RedirectToAction("Login");
         }
@@ -100,10 +104,11 @@ namespace SV21T1020620.Shop.Controllers
                 }
                 else
                 {
-                    var result = UserAccountService.ChangePassword(userName, oldPassword, newPassword);
+                    var result = UserAccountService.ChangePassword(UserAccountService.UserTypes.Customer, userName, oldPassword, newPassword);
                     if (result == true)
                     {
-                        return RedirectToAction("Logout");
+                        HttpContext.Session.Clear();
+                        return RedirectToAction("Index", "Home");
                     }
                     else
                     {
