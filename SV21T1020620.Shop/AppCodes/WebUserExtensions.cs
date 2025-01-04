@@ -1,5 +1,4 @@
-﻿using SV21T1020620.Shop;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 namespace SV21T1020620.Shop
 
 {

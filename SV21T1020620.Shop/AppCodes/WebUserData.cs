@@ -12,39 +12,45 @@ namespace SV21T1020620.Shop
         public string UserName { get; set; } = "";
         public string DisplayName { get; set; } = "";
         public string Photo { get; set; } = "";
-        public string count { get; set; }
+        public string Count { get; set; } = "";
+
         public List<string>? Roles { get; set; }
 
-        /// <summary>
-        /// Danh sách các Claims
-        /// </summary>
         private List<Claim> Claims
         {
             get
             {
-                List<Claim> claims = new List<Claim>()
-                {
-                    new Claim(nameof(UserId), UserId),
-                    new Claim(nameof(UserName), UserName),
-                    new Claim(nameof(DisplayName), DisplayName),
-                    new Claim(nameof(Photo), Photo),
-                    new Claim(nameof(count), count)
-                };
+                List<Claim> claims = new List<Claim>();
+
+                // Thêm Claim nếu giá trị không bị null hoặc rỗng
+                if (!string.IsNullOrEmpty(UserId))
+                    claims.Add(new Claim(nameof(UserId), UserId));
+                if (!string.IsNullOrEmpty(UserName))
+                    claims.Add(new Claim(nameof(UserName), UserName));
+                if (!string.IsNullOrEmpty(DisplayName))
+                    claims.Add(new Claim(nameof(DisplayName), DisplayName));
+                if (!string.IsNullOrEmpty(Photo))
+                    claims.Add(new Claim(nameof(Photo), Photo));
+                if (!string.IsNullOrEmpty(Count))
+                    claims.Add(new Claim(nameof(Count), Count));
+
+                // Thêm Claim cho vai trò (Role)
                 if (Roles != null)
                 {
                     foreach (var role in Roles)
-                        claims.Add(new Claim(ClaimTypes.Role, role));
+                    {
+                        if (!string.IsNullOrEmpty(role))
+                            claims.Add(new Claim(ClaimTypes.Role, role));
+                    }
                 }
-                return claims;
 
+                return claims;
             }
         }
-        /// <summary>
-        /// Tạo ClaimsPrincipal dựa trên thông tin của người dùng (cần lưu trong Cookie)
-        /// </summary>
-        /// <returns></returns>
+
         public ClaimsPrincipal CreatePrincipal()
         {
+            // Tạo ClaimsIdentity dựa trên danh sách Claims đã kiểm tra
             var identity = new ClaimsIdentity(Claims, CookieAuthenticationDefaults.AuthenticationScheme);
             var principal = new ClaimsPrincipal(identity);
             return principal;

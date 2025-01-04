@@ -29,7 +29,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Views\Product\" />
     <Folder Include="wwwroot\Image\Products\" />
   </ItemGroup>
 

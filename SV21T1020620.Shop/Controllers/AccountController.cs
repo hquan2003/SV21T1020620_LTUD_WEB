@@ -8,8 +8,6 @@ namespace SV21T1020620.Shop.Controllers
 {
     public class AccountController : Controller
     {
-        public const string Count = "count";
-        [HttpGet]
         public IActionResult Login()
         {
             return View();
@@ -20,12 +18,12 @@ namespace SV21T1020620.Shop.Controllers
             ViewBag.Username = username;
             if (string.IsNullOrEmpty(username))
             {
-                ModelState.AddModelError("Error", "Vui lòng nhập tên đăng nhập");
+                ModelState.AddModelError("Error", "Nhập tên đăng nhập");
                 return View();
             }
             if (string.IsNullOrEmpty(password))
             {
-                ModelState.AddModelError("Error", "Vui lòng nhập mật khẩu");
+                ModelState.AddModelError("Error", "Nhập mật khẩu");
                 return View();
             }
             var userAccount = UserAccountService.Authorize(UserAccountService.UserTypes.Customer, username, password);
@@ -34,17 +32,12 @@ namespace SV21T1020620.Shop.Controllers
                 ModelState.AddModelError("Error", "Sai tên đăng nhập hoặc mật khẩu");
                 return View();
             }
-            string customerID = userAccount.UserId;
-            int count = 0;
-            count = SV21T1020620.BusinessLayers.CartDataService.getCartByCustomerID(Convert.ToInt32(customerID)).Count;
-            // Dang nhap thanh cong:
             var userData = new WebUserData
             {
                 UserId = userAccount.UserId,
                 UserName = userAccount.UserName,
                 DisplayName = userAccount.DisplayName,
-                Roles = userAccount.RoleNames.Split(",").ToList(),
-                count = count + ""
+                Roles = userAccount.RoleNames.Split(",").ToList()
             };
 
             //

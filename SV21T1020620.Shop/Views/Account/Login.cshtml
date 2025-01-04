@@ -47,7 +47,6 @@
         <h3 class="text-center">HQ Shop - Đăng nhập</h3>
         <form id="loginForm" method="post" action="~/Account/Login">
             @Html.AntiForgeryToken()
-            @Html.ValidationMessage("Error")
             <div class="mb-3">
                 <label for="username" class="form-label">Tên đăng nhập</label>
                 <input type="text" class="form-control" id="username" name="username" placeholder="Nhập tên đăng nhập" required autofocus>
@@ -56,6 +55,7 @@
                 <label for="password" class="form-label">Mật khẩu</label>
                 <input type="password" class="form-control" id="password" name="password" placeholder="Nhập mật khẩu" required>
             </div>
+            @Html.ValidationMessage("Error", "", new { @class = "text-danger" })
             <div class="d-grid">
                 <button type="submit" class="btn btn-primary">Đăng Nhập</button>
             </div>
