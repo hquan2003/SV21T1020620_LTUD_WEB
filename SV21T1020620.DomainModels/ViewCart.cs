@@ -9,7 +9,7 @@ namespace SV21T1020620.DomainModels
     public class ViewCart
     {
         public int CartID { get; set; }
-        public int CartDetailID { get; set; }
+        public int CartdetailID { get; set; }
         public int ProductID { get; set; }
         public int CustomerID { get; set; }
         public string ProductName { get; set; } = "";

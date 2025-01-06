@@ -21,7 +21,7 @@
                     {
                         <li class="nav-item">
                             <a class="nav-link" href="~/Account/Cart">
-                                <i class="bi bi-cart"></i> Giỏ hàng
+                                <i class="fa fa-shopping-cart" ></i> Giỏ hàng
                                 <span class="badge bg-light text-dark position-relative" style="top: -3px;">@userData.Count</span>
                             </a>
                         </li>
@@ -30,7 +30,7 @@
                                 Xin chào: @userData.DisplayName
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="userDropdown">
-                                <li><a class="dropdown-item" href="~/Account/EditProfile">Sửa thông tin cá nhân</a></li>
+                                <li><a class="dropdown-item" href="~/Account/EditProfile?customerID=@userData.UserId">Sửa thông tin cá nhân</a></li>
                                 <li><a class="dropdown-item" href="~/Account/ChangePassword">Đổi mật khẩu</a></li>
                                 <li><a class="dropdown-item" href="~/Account/History">Lịch sử mua hàng</a></li>
                                 <li><hr class="dropdown-divider"></li>

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using SV21T1020620.BusinessLayers;
 using SV21T1020620.DomainModels;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SV21T1020620.Shop.Controllers
 {
@@ -53,11 +54,75 @@ namespace SV21T1020620.Shop.Controllers
         }
         public IActionResult Cart()
         {
-            return View();
+            var user = User.GetUserData();
+            if (user == null || user.UserId == null)
+            {
+                // Chuyển hướng đến trang đăng nhập nếu user không tồn tại
+                return RedirectToAction("Login", "Account");
+            }
+            int customerID = Convert.ToInt32(user.UserId);
+            var model = SV21T1020620.BusinessLayers.CartDataService.ListViewCart(customerID);
+            return View(model);
         }
-        public IActionResult EditProfile()
+        public IActionResult EditProfile(int customerID = 0)
         {
-            return View();
+            ViewBag.Title = "Cập nhật thông tin của khách hàng";
+            var data = CommonDataService.GetCustomer(customerID);
+            if (data == null)
+            {
+                return RedirectToAction("Index");
+            }
+            return View(data);
+        }
+        public IActionResult SaveProfile(Customer data)
+        {
+            ViewBag.Title = data.CustomerId == 0 ? "Bổ sung khách hàng mới" : "Cập nhật thông tin khách hàng";
+            // kiểm tra nếu dữ liệu đầu vào không hợp lệ thì tạo ra một thông báo lỗi và lưu trữ vào ModelState
+            if (string.IsNullOrWhiteSpace(data.CustomerName))
+                ModelState.AddModelError(nameof(data.CustomerName), "Tên khách hàng không được để trống");
+
+            if (string.IsNullOrWhiteSpace(data.ContactName))
+                ModelState.AddModelError(nameof(data.ContactName), " Tên liên hệ không được để trống");
+            if (string.IsNullOrWhiteSpace(data.Phone))
+                ModelState.AddModelError(nameof(data.Phone), "Vui lòng nhập điện thoại");
+            if (string.IsNullOrWhiteSpace(data.Email))
+                ModelState.AddModelError(nameof(data.Email), "vui lòng nhập Email");
+            if (string.IsNullOrWhiteSpace(data.Address))
+                ModelState.AddModelError(nameof(data.Address), "Vui lòng nhập địa chỉ");
+            if (string.IsNullOrWhiteSpace(data.Province))
+                ModelState.AddModelError(nameof(data.Province), "Vui lòng chọn tỉnh/thành phố");
+            // dựa vào thuộc tính IsVAlid của ModelState để bieetd có tồn tại lỗi hay không?
+            if (ModelState.IsValid == false)
+            {
+                return View("EditProfile", data);
+            }
+            try
+            {
+                if (data.CustomerId == 0)
+                {
+                    int id = CommonDataService.AddCustomer(data);
+                    if (id <= 0)
+                    {
+                        ModelState.AddModelError(nameof(data.Email), "Email bị trùng");
+                        return View("EditProfile", data);
+                    }
+                }
+                else
+                {
+                    bool result = CommonDataService.UpdateCustomer(data);
+                    if (result == false)
+                    {
+                        ModelState.AddModelError(nameof(data.Email), "Email bị trùng");
+                        return View("EditProfile", data);
+                    }
+                }
+                return RedirectToAction("Index", "Home");
+            }
+            catch
+            {
+                ModelState.AddModelError("Error", " Hệ thống tạm thời gián đoạn");
+                return View("Edit", data);
+            }
         }
         public IActionResult History()
         {

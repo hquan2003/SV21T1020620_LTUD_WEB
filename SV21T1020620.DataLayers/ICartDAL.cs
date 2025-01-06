@@ -1,9 +1,4 @@
 ﻿using SV21T1020620.DomainModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SV21T1020620.DataLayers
 {
@@ -15,12 +10,12 @@ namespace SV21T1020620.DataLayers
         public bool Update(Cart data);
         public int Count(int customerID);
         public Cart Get(int customerID);
-        public List<Cartdetail> GetDetailList(int cartID);
+        public List<ViewCart> GetDetailList(int customerID);
         public Cartdetail GetDetail(int cartID, int productID);
         bool SaveDetail(int cartID, int productID, int quantity);
-        bool DeleteDetail(int cartID, int productID);
+        bool DeleteDetail(int cartDetailID);
         bool SaveCart(int customerID, int sum);
         public Cartdetail? checkProductExists(int cartID, int productID);
-        public List<ViewCart> GetViewCarts(int userID);
+        public List<ViewCart> GetViewCarts(int customerID);
     }
 }

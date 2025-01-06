@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using SV21T1020620.BusinessLayers;
 using SV21T1020620.DomainModels;
+using SV21T1020620.Shop.Models;
+using System.Globalization;
 
 namespace SV21T1020620.Shop.Controllers
 {
@@ -9,58 +12,92 @@ namespace SV21T1020620.Shop.Controllers
     {
         private const string SHOPPING_CART = "ShoppingCart";
         [HttpGet]
-        [AllowAnonymous]   
-        public IActionResult Detail(int productID)
+        [AllowAnonymous]
+        public IActionResult Detail(int productID, string? tab = "specifications")
         {
-            Product? model = SV21T1020620.BusinessLayers.ProductDataService.GetProduct(productID);
-            if (model == null)
+            var product = ProductDataService.GetProduct(productID);
+            if (product == null)
             {
                 return RedirectToAction("Index", "Home");
             }
-            return View(model);
+
+            // Truyền tab cần hiển thị vào ViewBag
+            ViewBag.ActiveTab = tab;
+
+            return View(product);
         }
         [Authorize]
-        public IActionResult AddtoCart(int ProductID, int quantity)
+        public IActionResult AddToCart(int ProductID, int quantity)
         {
             var customer = User.GetUserData();
-            var Cart = CartDataService.getCartByCustomerID(Convert.ToInt32(customer.UserId));
-            if (Cart == null)
+            var cart = CartDataService.getCartByCustomerID(Convert.ToInt32(customer.UserId)) ?? new Cart
             {
-                var newCart = new Cart();
-                newCart.CustomerID = Convert.ToInt32(customer.UserId);
-                newCart.Count = 0;
-                Cart = newCart;
-                CartDataService.AddCart(Cart);
+                CustomerID = Convert.ToInt32(customer.UserId),
+                Count = 0
+            };
+
+            if (cart.CartID == 0)
+            {
+                CartDataService.AddCart(cart);
+                cart = CartDataService.getCartByCustomerID(Convert.ToInt32(customer.UserId));
             }
-            Cart = CartDataService.getCartByCustomerID(Convert.ToInt32(customer.UserId));
+
             var product = ProductDataService.GetProduct(ProductID);
             if (product != null)
             {
-                var CartID = Cart.CartID;
-                int productID = product.ProductID;
-                var exists = CartDataService.checkProductExists(CartID, productID);
+                var exists = CartDataService.checkProductExists(cart.CartID, product.ProductID);
                 if (exists == null)
                 {
-                    var data = new Cartdetail();
-                    data.Quantity = quantity;
-                    data.Price = product.Price;
-                    data.CartID = Cart.CartID;
-                    data.ProductID = product.ProductID;
-                    int id = CartDataService.AddCartDetail(data);
-                    int count = Cart.Count + 1;
-                    Cart.Count = count;
-                    bool kq = CartDataService.SaveCart(Cart);
+                    var data = new Cartdetail
+                    {
+                        Quantity = quantity,
+                        Price = product.Price,
+                        CartID = cart.CartID,
+                        ProductID = product.ProductID
+                    };
+                    CartDataService.AddCartDetail(data);
+                    cart.Count += 1;
+                    CartDataService.SaveCart(cart);
                 }
                 else
                 {
-                    int Quantity = exists.Quantity + quantity;
-                    bool id = CartDataService.SaveCartdetail(CartID, ProductID, Quantity);
+                    exists.Quantity += quantity;
+                    CartDataService.SaveCartdetail(cart.CartID, ProductID, exists.Quantity);
                 }
-
             }
+
             return RedirectToAction("Index", "Home");
         }
 
+        public IActionResult RemoveCart(int cartDetailID)
+        {
+            CartDataService.DeleteDetail(cartDetailID);
+            return RedirectToAction("Cart", "Account");
+
+        }
+        private List<CartItem> GetCartItems()
+        {
+            var sessionData = HttpContext.Session.GetString(SHOPPING_CART);
+            return string.IsNullOrEmpty(sessionData)?new List<CartItem>():JsonConvert.DeserializeObject<List<CartItem>>(sessionData);
+        }
+
+        private void SaveCartSession(List<CartItem> cart)
+        {
+            HttpContext.Session.SetString(SHOPPING_CART, JsonConvert.SerializeObject(cart));
+        }
+        [HttpPost]
+        [Authorize]
+        public IActionResult DeleteSelected(List<int> SelectedItems)
+        {
+            if (SelectedItems != null && SelectedItems.Count > 0)
+            {
+                foreach (var cartDetailID in SelectedItems)
+                {
+                    CartDataService.DeleteDetail(cartDetailID);
+                }
+            }
+            return RedirectToAction("Cart", "Account");
+        }
 
     }
 }

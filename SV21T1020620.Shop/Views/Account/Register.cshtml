@@ -47,11 +47,10 @@
 <body>
     <div class="register-container">
         <h3 class="text-center">HQ Shop - Đăng Ký</h3>
-        @Html.ValidationMessage("Error")
         <form id="registerForm" method="post" action="/Account/Save">
             <div class="mb-3">
                 <label for="fullName" class="form-label">Họ và Tên</label>
-                <input type="text" class="form-control" id="fullName" name="@nameof(Model.CustomerName)" placeholder="Nhập họ và tên" required>
+                <input type="text" class="form-control" id="fullName" name="@nameof(Model.CustomerName)" placeholder="Nhập họ và tên" required autofocus>
             </div>
             <div class="mb-3">
                 <label for="username" class="form-label">Tên liên hệ</label>
@@ -69,6 +68,7 @@
                 <label for="confirmPassword" class="form-label">Xác nhận mật khẩu</label>
                 <input type="password" class="form-control" id="confirmPassword" placeholder="Nhập lại mật khẩu" required>
             </div>
+            @Html.ValidationMessage("Error")
             <div class="d-grid">
                 <button type="submit" class="btn btn-primary">Đăng Ký</button>
             </div>

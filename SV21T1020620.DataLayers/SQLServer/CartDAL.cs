@@ -98,9 +98,22 @@ namespace SV21T1020620.DataLayers.SQLServer
             throw new NotImplementedException();
         }
 
-        public bool DeleteDetail(int cartID, int productID)
+        public bool DeleteDetail(int cartDetailID)
         {
-            throw new NotImplementedException();
+            {
+                bool result = false;
+                using (var connection = OpenConnection())
+                {
+                    var sql = @"DELETE FROM Cartdetails
+                    WHERE CartdetailID = @CartdetailID";
+                    var parameters = new
+                    {
+                        CartdetailID = cartDetailID,
+                    };
+                    result = connection.Execute(sql: sql, param: parameters, commandType: System.Data.CommandType.Text) > 0;
+                }
+                return result;
+            }
         }
 
         public Cart Get(int customerID)
@@ -125,9 +138,27 @@ namespace SV21T1020620.DataLayers.SQLServer
             throw new NotImplementedException();
         }
 
-        public List<Cartdetail> GetDetailList(int cartID)
+        public List<ViewCart> GetDetailList(int customerID)
         {
-            throw new NotImplementedException();
+            List<ViewCart>? data = new List<ViewCart>();
+
+            using (var connection = OpenConnection())
+            {
+                var sql = @"SELECT dbo.Cartdetails.CartdetailID, dbo.Cartdetails.Quantity, dbo.Cartdetails.Price, dbo.Carts.CustomerID, dbo.Products.ProductName, dbo.Products.Photo
+                             FROM     dbo.Cartdetails INNER JOIN
+                                      dbo.Carts ON dbo.Cartdetails.CartID = dbo.Carts.CartID INNER JOIN
+                                      dbo.Customers ON dbo.Carts.CustomerID = dbo.Customers.CustomerID INNER JOIN
+                                      dbo.Products ON dbo.Cartdetails.ProductID = dbo.Products.ProductID
+                                WHERE dbo.Carts.CustomerID = @CustomerID";
+                var parameters = new
+                {
+                    customerID = customerID
+
+                };
+                data = connection.Query<ViewCart>(sql: sql, param: parameters, commandType: System.Data.CommandType.Text).ToList();
+                connection.Close();
+            }
+            return data;
         }
 
         public bool SaveCart(int customerID, int sum)
@@ -176,7 +207,7 @@ namespace SV21T1020620.DataLayers.SQLServer
             }
             return result;
         }
-        public List<ViewCart> GetViewCarts(int userID)
+        public List<ViewCart> GetViewCarts(int customerID)
         {
             List<ViewCart> viewCarts = new List<ViewCart>();
             using (var connection = OpenConnection())
@@ -191,10 +222,10 @@ namespace SV21T1020620.DataLayers.SQLServer
                               ,[Price]
                               ,[Total]
                           FROM [LiteCommerceDB].[dbo].[ViewCart]
-                          Where CustomerID = @CútomẻID";
+                          Where CustomerID = @CustomerID";
                 var parameters = new
                 {
-
+                    CustomerID = customerID
 
                 };
 

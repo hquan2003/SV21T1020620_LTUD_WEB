@@ -266,12 +266,12 @@ namespace SV21T1020620.Web.Controllers
             if (data.DisplayOrder == 0)
                 ModelState.AddModelError(nameof(data.DisplayOrder), "Thứ tự không được để trống ");
 
-            if (!ModelState.IsValid && data.AttributeID > 0) // NẾu trường hợp Modelstate không hợp lệ
+            if (!ModelState.IsValid && data.AttributeID > 0)
             {
                 ViewBag.Title = "Cập nhật thuộc tính của mặt hàng";
                 return View("Attribute", data);
             }
-            if (!ModelState.IsValid) // NẾu trường hợp Modelstate không hợp lệ
+            if (!ModelState.IsValid)
             {
                 ViewBag.Title = "Bổ sung thuộc tính của mặt hàng";
                 return View("Attribute", data);
@@ -279,7 +279,7 @@ namespace SV21T1020620.Web.Controllers
             if (data.AttributeID == 0)
             {
                 long id = ProductDataService.AddAttribute(data);
-                if (id >= 0)
+                if (id <= 0)
                 {
                     ViewBag.Title = "Bổ sung thuộc tính của mặt hàng";
                     return View("Edit", data);
@@ -294,7 +294,7 @@ namespace SV21T1020620.Web.Controllers
                     return View("Edit", data);
                 }
             }
-            return RedirectToAction("Edit");
+            return RedirectToAction("Edit", new { id = data.ProductID });
         }
     }
 }

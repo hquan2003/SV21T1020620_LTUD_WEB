@@ -1,53 +1,110 @@
-﻿@model SV21T1020620.DomainModels.Customer;
+﻿@model SV21T1020620.DomainModels.Customer
 @{
     ViewBag.Title = "Sửa Thông Tin";
 }
-<div class="container">
-    <h2>Sửa thông tin cá nhân</h2>
-    <form asp-action="EditProfile" method="post">
-        <input type="hidden" asp-for="CustomerId" />
+<section class="section py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-10">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0">Thông tin khách hàng</h4>
+                    </div>
+                    <div class="card-body">
+                        <form action="~/Account/SaveProfile" method="post" class="needs-validation" novalidate>
+                            <input type="hidden" name="@nameof(Model.CustomerId)" value="@Model.CustomerId" />
 
-        <div class="mb-3">
-            <label asp-for="CustomerName" class="form-label">Họ và Tên</label>
-            <input type="text" class="form-control" asp-for="CustomerName" required />
-            <span asp-validation-for="CustomerName" class="text-danger"></span>
-        </div>
+                            <div class="mb-3">
+                                <label for="customer-name" class="form-label">Tên khách hàng:</label>
+                                <input id="customer-name"
+                                       type="text"
+                                       class="form-control"
+                                       name="@nameof(Model.CustomerName)"
+                                       value="@Model.CustomerName"
+                                       placeholder="Nhập tên khách hàng"
+                                       required>
+                                @Html.ValidationMessage(nameof(Model.CustomerName))
+                            </div>
 
-        <div class="mb-3">
-            <label asp-for="Email" class="form-label">Email</label>
-            <input type="email" class="form-control" asp-for="Email" required />
-            <span asp-validation-for="Email" class="text-danger"></span>
-        </div>
+                            <div class="mb-3">
+                                <label for="contact-name" class="form-label">Tên liên hệ:</label>
+                                <input id="contact-name"
+                                       type="text"
+                                       class="form-control"
+                                       name="@nameof(Model.ContactName)"
+                                       value="@Model.ContactName"
+                                       placeholder="Nhập tên liên hệ"
+                                       required>
+                                @Html.ValidationMessage(nameof(Model.ContactName))
+                            </div>
 
-        <div class="mb-3">
-            <label asp-for="Phone" class="form-label">Số điện thoại</label>
-            <input type="text" class="form-control" asp-for="Phone" required />
-            <span asp-validation-for="Phone" class="text-danger"></span>
-        </div>
+                            <div class="mb-3">
+                                <label for="phone" class="form-label">Điện thoại:</label>
+                                <input id="phone"
+                                       type="text"
+                                       class="form-control"
+                                       name="@nameof(Model.Phone)"
+                                       value="@Model.Phone"
+                                       placeholder="Nhập số điện thoại"
+                                       required>
+                                @Html.ValidationMessage(nameof(Model.Phone))
+                            </div>
 
-        <div class="mb-3">
-            <label asp-for="Address" class="form-label">Địa chỉ</label>
-            <input type="text" class="form-control" asp-for="Address" />
-            <span asp-validation-for="Address" class="text-danger"></span>
-        </div>
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email:</label>
+                                <input id="email"
+                                       type="email"
+                                       class="form-control"
+                                       name="@nameof(Model.Email)"
+                                       value="@Model.Email"
+                                       placeholder="Nhập địa chỉ email"
+                                       required>
+                                @Html.ValidationMessage(nameof(Model.Email))
+                            </div>
 
-        <div class="form-group" name="@nameof(Model.Province)">
-            <label>Tỉnh/Thành:</label>
-            <select class="form-control" name="@nameof(Model.Province)">
-                <option value="">--Chọn Tỉnh/Thành--</option>
-                @foreach (var province in SV21T1020620.BusinessLayers.CommonDataService.ListOfProvinces())
-                {
-                    if (province.ProvinceName == Model.Province)
-                    {
-                        <option selected value="@province.ProvinceName">@province.ProvinceName</option>
-                    }
-                    else
-                    {
-                        <option value="@province.ProvinceName">@province.ProvinceName</option>
-                    }
-                }
-            </select>
+                            <div class="mb-3">
+                                <label for="address" class="form-label">Địa chỉ:</label>
+                                <input id="address"
+                                       type="text"
+                                       class="form-control"
+                                       name="@nameof(Model.Address)"
+                                       value="@Model.Address"
+                                       placeholder="Nhập địa chỉ"
+                                       required>
+                                @Html.ValidationMessage(nameof(Model.Address))
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="province" class="form-label">Tỉnh/thành:</label>
+                                <select id="province" class="form-select" name="@nameof(Model.Province)" required>
+                                    <option value="">--Chọn Tỉnh/Thành--</option>
+                                    @foreach (var province in SV21T1020620.BusinessLayers.CommonDataService.ListOfProvinces())
+                                    {
+                                        if (province.ProvinceName == Model.Province)
+                                        {
+                                            <option selected value="@province.ProvinceName">@province.ProvinceName</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@province.ProvinceName">@province.ProvinceName</option>
+                                        }
+                                    }
+                                </select>
+                                @Html.ValidationMessage(nameof(Model.Province))
+                            </div>
+
+                            <div class="d-flex justify-content-between">                              
+                                <a href="~/Home/Index" class="btn btn-secondary">
+                                    <i class="fa fa-arrow-left"></i> Quay lại
+                                </a>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fa fa-floppy-o"></i> Lưu dữ liệu
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
-        <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
-    </form>
-</div>
+    </div>
+</section>

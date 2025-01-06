@@ -8,7 +8,7 @@ namespace SV21T1020620.DomainModels
 {
     public class Cartdetail
     {
-        public int CartdetailID { get; set; }
+        public int CartDetailID { get; set; }
         public int Quantity { get; set; }
         public decimal Price { get; set; }
         public int CartID { get; set; }

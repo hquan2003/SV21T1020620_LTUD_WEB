@@ -1,11 +1,6 @@
-﻿using SV21T1020620.DataLayers.SQLServer;
-using SV21T1020620.DataLayers;
+﻿using SV21T1020620.DataLayers;
+using SV21T1020620.DataLayers.SQLServer;
 using SV21T1020620.DomainModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SV21T1020620.BusinessLayers
 {
@@ -17,9 +12,9 @@ namespace SV21T1020620.BusinessLayers
         {
             cartDB = new CartDAL(Configuration.ConnectionString);
         }
-        public static int AddCart(Cart Cart)
+        public static int AddCart(Cart data)
         {
-            return cartDB.Add(Cart);
+            return cartDB.Add(data);
         }
         public static int AddCartDetail(Cartdetail data)
         {
@@ -44,6 +39,14 @@ namespace SV21T1020620.BusinessLayers
         public static bool SaveCart(Cart Cart)
         {
             return cartDB.Update(Cart);
+        }
+        public static List<ViewCart> ListViewCart(int customerID)
+        {
+            return cartDB.GetDetailList(customerID);
+        }
+        public static bool DeleteDetail(int cartDetailID)
+        {
+            return cartDB.DeleteDetail(cartDetailID);
         }
     }
 }

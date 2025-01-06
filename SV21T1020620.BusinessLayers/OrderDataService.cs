@@ -209,5 +209,29 @@ namespace SV21T1020620.BusinessLayers
             }
             return false;
         }
+        public static int InitOrderProduct(int customerID,
+        string deliveryProvince, string deliveryAddress,
+        IEnumerable<OrderDetail> details)
+
+        {
+            if (details.Count() == 0)
+                return 0;
+            Order data = new Order()
+            {
+                CustomerID = customerID,
+                DeliveryProvince = deliveryProvince,
+                DeliveryAddress = deliveryAddress
+            };
+            int orderID = orderDB.Add(data);
+            if (orderID > 0)
+            {
+                foreach (var item in details)
+                {
+                    orderDB.SaveDetail(orderID, item.ProductID, item.Quantity, item.SalePrice);
+                }
+                return orderID;
+            }
+            return 0;
+        }
     }
 }

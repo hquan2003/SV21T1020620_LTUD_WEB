@@ -11,6 +11,10 @@ namespace SV21T1020620.Shop
         public string UserId { get; set; } = "";
         public string UserName { get; set; } = "";
         public string DisplayName { get; set; } = "";
+        public string Address { get; set; } = "";
+        public string Province { get; set; } = "";
+        public string Email { get; set; } = "";
+        public string Phone { get; set; } = "";
         public string Photo { get; set; } = "";
         public string Count { get; set; } = "";
 
@@ -31,6 +35,14 @@ namespace SV21T1020620.Shop
                     claims.Add(new Claim(nameof(DisplayName), DisplayName));
                 if (!string.IsNullOrEmpty(Photo))
                     claims.Add(new Claim(nameof(Photo), Photo));
+                if (!string.IsNullOrEmpty(Email))
+                    claims.Add(new Claim(nameof(Email), Email));
+                if (!string.IsNullOrEmpty(Phone))
+                    claims.Add(new Claim(nameof(Phone), Phone));
+                if (!string.IsNullOrEmpty(Address))
+                    claims.Add(new Claim(nameof(Address), Address));
+                if (!string.IsNullOrEmpty(Province))
+                    claims.Add(new Claim(nameof(Province), Province));
                 if (!string.IsNullOrEmpty(Count))
                     claims.Add(new Claim(nameof(Count), Count));
 
