@@ -106,7 +106,6 @@
 </nav>
 @section scripts {
     <script>
-        // Giả sử bạn đang sử dụng jQuery
         $("#changePasswordForm").submit(function (event) {
             event.preventDefault();
 
@@ -114,21 +113,18 @@
             var newPassword = $('#newPassword').val();
             var confirmPassword = $('#confirmPassword').val();
 
-            // Gửi dữ liệu đến server bằng AJAX
             $.ajax({
-                url: '/Account/ChangePassword', // Đường dẫn đến controller
+                url: '/Account/ChangePassword',
                 type: 'POST',
                 data: {
                     oldPassword: oldPassword,
                     newPassword: newPassword
                 },
                 success: function (response) {
-                    // Xử lý khi đổi mật khẩu thành công
                     $('#changePasswordModal').modal('hide');
                     alert('Đổi mật khẩu thành công!');
                 },
                 error: function (error) {
-                    // Xử lý khi có lỗi
                     alert('Đổi mật khẩu thất bại. Vui lòng thử lại.');
                 }
             });
